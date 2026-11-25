@@ -82,11 +82,6 @@
   --text-3: #76766f;
   --hover: rgba(245, 244, 240, 0.06);
 
-  /* Brand blue lifts on dark: #2A51FD does not hold against graphite. */
-  --accent: #3b63ff;
-  --on-accent: #ffffff;
-  --accent-text: #9db2ff;
-  --accent-soft: rgba(76, 111, 255, 0.26);
 
   /* Status colours, for what a QA pass is actually looking for: a value that
      is right, one that is a guess, one that is a bug. They never decorate. */
@@ -96,12 +91,10 @@
   --danger: #ff6369;
   --on-danger: #1c0406;
 
-  /* The selector line reads like code, so the id gets a syntax colour. */
-  --syntax-id: #e5a23a;
   /* B on the panel. On the page it is always --hl-b. */
   --mark-b: #ffb224;
 
-  /* Box model: one quiet tint for the rings, the accent for the content. It
+  /* Box model: one quiet tint for the rings, a raised well for the content. It
      was four colours, which was the loudest thing on the panel. */
   --box-ring: rgba(245, 244, 240, 0.04);
   --box-ring-line: transparent;
@@ -144,10 +137,6 @@
   --text-3: #84837c;
   --hover: rgba(23, 23, 23, 0.05);
 
-  --accent: #2a51fd;
-  --on-accent: #ffffff;
-  --accent-text: #2442c9;
-  --accent-soft: #eef2ff;
 
   --ok: #0b7a4b;
   --on-ok: #ffffff;
@@ -155,7 +144,6 @@
   --danger: #c8253a;
   --on-danger: #ffffff;
 
-  --syntax-id: #8f5400;
   --mark-b: #b86a00;
 
   --box-ring: transparent;
@@ -279,7 +267,7 @@
 @container (max-width: 860px) { .pick { display: none; } }
 @container (max-width: 580px) { .wh, .tb .read { display: none; } }
 .layer[data-side="left"] .stage { left: var(--panel-w); right: 0; }
-.stage :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 1px; }
+.stage :focus-visible { outline: 2px solid var(--text); outline-offset: 1px; }
 
 .tb {
   flex: none;
@@ -341,7 +329,7 @@
 .pick[data-disabled] { color: var(--text-2); }
 .pick[data-disabled] select { cursor: default; }
 .pick[data-disabled]::after { opacity: 0.4; }
-.pick:focus-within { outline: 2px solid var(--accent-text); outline-offset: 1px; }
+.pick:focus-within { outline: 2px solid var(--text); outline-offset: 1px; }
 
 .seg {
   flex: none;
@@ -472,7 +460,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .stage[data-dragging="w"] .grip-x::before,
 .stage[data-dragging="w"] .grip-x::after,
 .stage[data-dragging="h"] .grip-y::before,
-.stage[data-dragging="h"] .grip-y::after { background: var(--accent-text); }
+.stage[data-dragging="h"] .grip-y::after { background: var(--text); }
 .stage[data-dragging="w"] { cursor: ew-resize; }
 .stage[data-dragging="h"] { cursor: ns-resize; }
 .stage[data-dragging] { user-select: none; }
@@ -534,7 +522,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .panel[data-side="left"] { right: auto; left: 0; }
 
 .panel :focus-visible {
-  outline: 2px solid var(--accent-text);
+  outline: 2px solid var(--text);
   outline-offset: 1px;
 }
 
@@ -672,7 +660,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 }
 /* The step you are on. */
 .guide li.is-now { color: var(--text); }
-.guide li.is-now .guide-n { background: var(--accent); color: var(--on-accent); }
+.guide li.is-now .guide-n { background: var(--text); color: var(--bg); }
 
 .notice {
   margin: 0 14px 12px;
@@ -722,8 +710,10 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.identity .t-tag { color: var(--accent-text); }
-.identity .t-id { color: var(--syntax-id); }
+/* Plain, with the classes quieter. Coloured syntax put a blue tag and an amber
+   id beside the blue A and amber B marks, which read as selection. */
+.identity .t-tag { color: var(--text); }
+.identity .t-id { color: var(--text); }
 .identity .t-class { color: var(--text-2); }
 
 /* The DOM walk, as something you can see and click. It used to exist only as
@@ -960,7 +950,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   border-radius: 50%;
   background: var(--text-3);
 }
-.status-dot.is-lockedA { background: var(--accent); }
+.status-dot.is-lockedA { background: var(--hl-a); }
 .status-dot.is-measuring { background: var(--measure); }
 .status-dot.is-lockedAB { background: var(--mark-b); }
 
@@ -1052,8 +1042,8 @@ kbd {
 .content-box {
   padding: 6px 4px;
   border-radius: 5px;
-  background: var(--accent-soft);
-  color: var(--accent-text);
+  background: var(--bg-raised);
+  color: var(--text);
 }
 
 .dim {
@@ -1079,7 +1069,7 @@ kbd {
 
 /* ---------- design tokens ---------- */
 
-/* The token name is the answer, so it gets the accent and the raw value drops
+/* The token name is the answer, so it leads in full contrast and the raw value drops
    to a quiet second line underneath it. */
 .row dd.has-token {
   display: flex;
@@ -1091,7 +1081,7 @@ kbd {
 
 .token {
   max-width: 100%;
-  color: var(--accent-text);
+  color: var(--text);
   font: 400 12px/1.5 var(--mono);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1127,8 +1117,8 @@ kbd {
 .media-format {
   padding: 2px 7px;
   border-radius: 4px;
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--text);
+  color: var(--bg);
   font: 500 10.5px/1.5 var(--sans);
   letter-spacing: 0.02em;
 }

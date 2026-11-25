@@ -84,16 +84,18 @@ panel that is read all day, every border is something to look past.
 The tool's theme stops at the frame's edge. The page inside is always its own
 colours, on white, as a browser would paint it.
 
-### Accent
+### Blue means A, and nothing else
 
-| Token | Dark | Light | Use |
-| --- | --- | --- | --- |
-| `--accent` | `#3B63FF` | `#2A51FD` (brand) | Fills that carry `--on-accent` text: the A mark, the current step |
-| `--accent-text` | `#9DB2FF` | `#2442C9` | The same hue as text: tags, token names |
-| `--accent-soft` | accent 26% | `#EEF2FF` | The content box in the spacing diagram |
+The panel has no accent colour. Its UI is the brand's carbon and paper: the
+current step, focus rings, the format chip and the content box are all drawn in
+`--text` on `--bg`, or the reverse.
 
-One accent, used sparingly. The active unit or device is a raised neutral chip,
-not an accent fill: it is a setting, not a call to action.
+Blue appears only where it means the first selected element: the A outline and
+label on the page, the A badge and the A status dot in the panel. Amber is the
+same for B. They are functional, chosen to stay visible and distinct on any
+website, which the brand's neutrals cannot do. The selector line is plain for
+the same reason: a blue tag and an amber id beside the A and B marks read as
+selection.
 
 ### Status
 
@@ -132,8 +134,8 @@ Three things changed here, all for sites the old colours failed on:
 
 ### Box model
 
-One quiet tint for the rings and the accent for the content: `--box-ring`,
-`--box-ring-line`, `--accent-soft`. It was four colours in the DevTools order,
+One quiet tint for the rings and a raised well for the content: `--box-ring`,
+`--box-ring-line`, `--bg-raised`. It was four colours in the DevTools order,
 which made it the loudest thing on the panel. Border is no longer a ring; it is
 a row under the diagram, because it is almost always 0 or 1px and a ring of
 zeros was a third of the drawing.
@@ -217,7 +219,7 @@ scale with it.
 
 Two size handles hang off the frame: one at the middle of the right edge for
 width, one at the middle of the bottom edge for height. Each is two short
-lines in `--text-3`, full contrast on hover and `--accent-text` while dragging.
+lines in `--text-3`, full contrast on hover and while dragging.
 Arrow keys move them by 10px, or 50 with Shift.
 
 The stage opens in Interact, so the page works as it did a moment ago, and
@@ -242,8 +244,8 @@ image has no typography; a static div has no fill.
 
 ### Selection
 
-A mark, then `div#hero.card` in mono, coloured by part: tag in `--accent-text`,
-id in `--syntax-id`, classes in `--text-2`. The mark is a filled blue `A` once
+A mark, then `div#hero.card` in mono: tag and id in `--text`, classes in
+`--text-2`. The mark is a filled blue `A` once
 locked and a dashed square while only hovering, matching the outline on the
 page.
 
@@ -252,7 +254,7 @@ This is the DOM walk as something you can see; `Alt` + scroll still works.
 
 ### First-run steps
 
-Three numbered lines on `--accent-soft`, with the step you are on filled in.
+Three numbered lines, with the step you are on filled in `--text`.
 Shown from the first frame until a measurement has been kept or the steps are
 dismissed. Numbered because it is a sequence.
 
@@ -329,8 +331,8 @@ one, so the line stays continuous underneath it.
 
 ### Unit toggle
 
-A three-up segmented control in the panel header. The active mode is a filled
-`--accent` pill; inactive modes are `--text-2` text that goes full contrast on
+A three-up segmented control in the panel header. The active mode is a raised
+neutral chip; inactive modes are `--text-2` text that goes full contrast on
 hover. `aria-pressed` carries the state.
 
 ## Behaviour rules
@@ -414,7 +416,7 @@ and the value sits under it, quieter.
 
 | Part | Spec |
 | --- | --- |
-| Token name | 12px/500 mono, `--accent-text` |
+| Token name | 12px/400 mono, `--text` |
 | Value match | the same, with `underline dotted var(--warn)`, 3px offset |
 | Raw value | 11px/400 mono, `--text-2`, right-aligned under the name |
 
@@ -426,10 +428,10 @@ value yields the hex for Figma.
 | Part | Spec |
 | --- | --- |
 | Kind | 12.5px/500 sans, `--text` |
-| Format chip | 10px/500 mono, `--on-accent` on `--accent`, 4px radius |
+| Format chip | 10.5px/500 sans, `--bg` on `--text`, 4px radius |
 
 The format is the one thing being looked for, so it is the only chip on the panel
-that gets a filled accent ground.
+that is filled solid.
 
 ## A/B pair
 

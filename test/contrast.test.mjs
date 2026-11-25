@@ -60,10 +60,8 @@ for (const [theme, set] of [['dark ', dark], ['light', light]]) {
   }
   check(theme, set, 'text-3', 'bg', 3);
   check(theme, set, 'text-3', 'bg-raised', 3);
-  check(theme, set, 'accent-text', 'bg', 4.5);
-  check(theme, set, 'accent-text', 'bg-raised', 4.5);
-  check(theme, set, 'on-accent', 'accent', 4.5);
-  check(theme, set, 'syntax-id', 'bg', 4.5);
+  // Inverted chips and the current step: the ground colour set on the text one.
+  check(theme, set, 'bg', 'text', 7);
   for (const status of ['ok', 'warn', 'danger']) {
     check(theme, set, status, 'bg', 4.5);
     check(theme, set, status, 'bg-raised', 4.5);
