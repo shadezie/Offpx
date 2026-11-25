@@ -12,7 +12,7 @@ designers and front-end teams who notice the pixel that is off.
 
 Say it *off-pix*. Write it Offpx: one word, capital O, lowercase px.
 
-![Measuring the gap between two headings, with the spec of both](docs/readme/gap-distance.png)
+![Offpx framing a portfolio at phone, tablet, desktop and large desktop sizes](docs/readme/devices.gif)
 
 ## What it does
 
@@ -126,6 +126,23 @@ Where that is not enough, and on local `file://` pages, the tool says so and
 inspects the page in place, with the panel docked over it and device sizes
 unavailable.
 
+Rotate a phone or tablet, and the page answers at the new orientation:
+
+![A phone frame rotating to landscape and back](docs/readme/rotate.gif)
+
+Drag the handles on the frame's right and bottom edges, as in DevTools:
+
+![The frame dragged wider, narrower and shorter from its edges](docs/readme/resize.gif)
+
+Or type an exact width and height:
+
+![A custom size typed into the width and height fields](docs/readme/custom.gif)
+
+A 30-second walkthrough of all of it is in [docs/media/offpx-demo.mp4](docs/media/offpx-demo.mp4).
+
+The screenshots and recordings are of [shadezie.com](https://shadezie.com), served
+locally.
+
 ### The panel
 
 A side panel docked to the right edge, full height, there from the moment the
@@ -164,7 +181,7 @@ instead of on what you are looking at.
 
 ## Design tokens
 
-![A colour reported as --ink, with the hex underneath](docs/readme/font-size.png)
+![A paragraph at phone width, its colour reported as --ink-2 with the hex underneath](docs/readme/02-type-mobile.png)
 
 If the page is built on CSS custom properties, the panel names the token rather
 than the value it resolved to: `--color-brand` instead of `#2A51FD`, with the
@@ -185,7 +202,7 @@ shown as before.
 
 ## Media
 
-![An image reported with its format, ratio and asset scale](docs/readme/image-video-tag.png)
+![An avatar reported as a JPG, with its intrinsic size, ratio and asset scale](docs/readme/05-media.png)
 
 Hover an image or video and the panel says which it is, what format it is being
 served in, and how the asset compares to the box it is drawn in.
@@ -202,7 +219,7 @@ served in, and how the asset compares to the box it is drawn in.
 
 ## What the measurements mean
 
-![An element measured inside its container, one number per edge](docs/readme/container-padding.png)
+![The vertical gap between two project titles, with the type of each](docs/readme/01-measure.png)
 
 - **Two elements side by side or stacked**: one gap number, drawn between the
   facing edges.
@@ -234,8 +251,6 @@ as their on-page highlights: the type spec for text, width and height for a box.
   behave differently on the stage than in the tab.
 - **Where a page cannot be framed, the panel sits on it.** Whatever is under
   the panel cannot be hovered until you flip it to the other edge.
-- **Screenshots in this README** predate the side panel and the Offpx name,
-  and show the old floating card.
 - **Iframes inside the page** are inspected as one element. The tool does not
   reach into them.
 - **Highlight badges** show rendered size in px whatever the unit toggle says.
