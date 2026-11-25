@@ -1,16 +1,23 @@
-# Design Tool
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/offpx-lockup-reversed.svg">
+  <img src="docs/brand/offpx-lockup.svg" alt="Offpx" height="40">
+</picture>
 
-A Chrome extension that turns any website into something you can QA the way you
-review a Figma file. Hover an element to read its type styles. Click two
-elements to measure the gap between them. See padding, border and margin as a
-spacing box instead of an alphabetical list of CSS.
+**Every pixel matters.**
 
-Built for designers doing design QA, not for reading CSS.
+Offpx is a Chrome extension that finds where the build drifted from the design.
+It inspects live websites: it measures spacing, reveals type, colour and layout
+properties, and tests responsive layouts at any screen size. It is made for
+designers and front-end teams who notice the pixel that is off.
 
-![Measuring the gap between two headings, with the spec of both](docs/readme/gap-distance.png)
+Say it *off-pix*. Write it Offpx: one word, capital O, lowercase px.
+
+![Offpx framing a portfolio at phone, tablet, desktop and large desktop sizes](docs/readme/devices.gif)
 
 ## What it does
 
+- **A stage with device sizes.** The page is framed beside the panel at mobile,
+  tablet, desktop or large desktop size, or any width and height you type.
 - **Type styles at a glance.** Size, weight and line height as large readouts,
   plus family, letter spacing, transform and colour underneath.
 - **Measure between two elements.** Dimension lines drawn on the page, with
@@ -31,19 +38,28 @@ Built for designers doing design QA, not for reading CSS.
 
 ## Permissions
 
-`activeTab`, `scripting` and `storage`. That is all.
+`activeTab`, `scripting`, `storage` and `declarativeNetRequestWithHostAccess`.
 
 There is no host permission and no always-on content script. Nothing is injected
 into any page until you click the toolbar icon or press the shortcut, and Chrome
 grants access only to that one tab, only for that visit. Install shows no "read
 your data on all websites" warning.
 
-It makes no network requests. It stores your unit, theme, card position and card
-size, locally, and nothing else.
+The fourth permission exists for the stage. Many sites send a header that
+forbids showing them inside a frame, and the stage is a frame. While the tool is
+on in a tab, one rule removes `X-Frame-Options` and `Content-Security-Policy`
+from that tab's own frames of the site you are on, and it is deleted when the
+tool is turned off. It touches no other tab and no other site, and the page in
+the tab itself keeps its headers: only the copy on the stage loads without
+them.
+
+It makes no network requests of its own. It stores your unit, theme, which edge
+the panel docks to, which sections you folded and the stage size you last used,
+locally, and nothing else.
 
 ## Install
 
-[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/design-tool/ggnmijonbnnankhpgaiiieejmbdopbka)
+[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/ggnmijonbnnankhpgaiiieejmbdopbka)
 
 Or load it from source:
 
@@ -59,34 +75,93 @@ extension card, refresh the page you are testing.
 
 | Action | What happens |
 | --- | --- |
-| Toolbar icon, or `Option+Shift+I` (`Alt+Shift+I` on Windows) | Arms inspect mode, badge reads `ON` |
-| Hover | The card reads typography, spacing, layout and fill for whatever is under the cursor |
+| Toolbar icon, or `Option+Shift+I` (`Alt+Shift+I` on Windows) | Opens the panel and arms inspect mode, badge reads `ON` |
+| Hover | The panel reads typography, spacing, layout and fill for whatever is under the cursor |
 | Click an element | Locks it as **A**, blue |
-| Hover another | Live measurement between A and it |
-| Click again | Freezes it as **B**, amber |
-| Click a third element | Starts a new measurement from that one |
-| Hold `Cmd` / `Ctrl` while hovering | Reaches past overlays to the most specific element under the cursor |
-| `Alt` + scroll, or `[` / `]` | Walks up and down the DOM |
+| Hold `Cmd` / `Ctrl` and hover another | Shows the gap between A and it, live |
+| `Cmd` / `Ctrl` + click | Keeps that measurement on screen, the second element becomes **B**, amber |
+| Click another element, no key held | Selects it as the new A |
+| Hold `Cmd` / `Ctrl` with nothing locked | Reaches past overlays to the most specific element under the cursor |
+| `Option` + scroll (`Alt` on Windows), `[` / `]`, or the trail in the panel | Steps out to the parent element, or back in |
 | `U` | Cycles px / rem / em |
 | Click any value | Copies it |
-| `Esc` | Clears the measurement. `Esc` again exits |
+| `Esc`, or **Clear** in the panel | Clears the selection |
+| ✕ in the panel, or the toolbar icon again | Closes the tool |
 
 While inspect mode is armed the page does not receive clicks, so you can measure
 a nav link without navigating away.
 
-### The card
+Measurements wait for the key on purpose. Showing a dimension line on every
+hover after locking A covered the page in numbers while you were only moving the
+mouse. Without the key, hovering shows a dashed outline of what a click would
+select and nothing else.
 
-It sits in the top-right corner and stays there. It does not follow the cursor
-and it does not change corners as you hover.
+### The stage
+
+Turning the tool on moves the page onto a stage: the same URL, loaded in a
+frame beside the panel. It opens at **Fit**, the largest size the stage can show
+at 100%.
 
 | Control | What it does |
 | --- | --- |
-| Grip, top left | Drag to place the card anywhere. Double-click to send it home |
-| Corner handle | Drag to resize, 260 to 640 wide |
-| Sun / moon | Light or dark |
-| ✕ | Stops the tool, same as `Esc` `Esc` |
+| Interact / Inspect | The stage opens in Interact, where the page works as normal: open a menu, follow a link. Switch to Inspect to hover and click for styles and measurements |
+| Device icons | Mobile 390, Tablet 768, Desktop 1440, Large desktop 1920, or Fit |
+| Size list | The named sizes for that device, following Figma's frame presets: iPhones from SE to 18 Pro Max, Android, iPads, Surface, MacBooks, and 2560 × 1440 under Large. Closed, it shows the device name; the list shows each size |
+| Width × height | Type any size from 240 to 3840 |
+| Rotate | Swaps width and height |
+| Handles on the frame's right and bottom edges | Drag to set the width or the height, as in DevTools. Arrow keys nudge them |
+| Percentage, right | How far the page is scaled down to fit. Measurements are always the page's real pixels |
 
-Position, size and theme persist across pages.
+A framed page has a real viewport, so media queries, `vh` units and container
+sizes all respond to the size you pick. It is a viewport, not a device: the
+user agent, touch input and pixel density stay your desktop's.
+
+The page loads a second time to get onto the stage, so anything held only in
+memory starts over: an open modal, a half-filled form. Your login carries
+across. Use Interact to get back to the state you want to inspect.
+
+**Some sites refuse to be framed.** They send a header that forbids it. The
+tool removes that header for the stage's own frame, so most of them still work.
+Where that is not enough, and on local `file://` pages, the tool says so and
+inspects the page in place, with the panel docked over it and device sizes
+unavailable.
+
+Rotate a phone or tablet, and the page answers at the new orientation:
+
+![A phone frame rotating to landscape and back](docs/readme/rotate.gif)
+
+Drag the handles on the frame's right and bottom edges, as in DevTools:
+
+![The frame dragged wider, narrower and shorter from its edges](docs/readme/resize.gif)
+
+Or type an exact width and height:
+
+![A custom size typed into the width and height fields](docs/readme/custom.gif)
+
+A 30-second walkthrough of all of it is in [docs/media/offpx-demo.mp4](docs/media/offpx-demo.mp4).
+
+The screenshots and recordings are of [shadezie.com](https://shadezie.com), served
+locally.
+
+### The panel
+
+A side panel docked to the right edge, full height, there from the moment the
+tool is on. It does not float, follow the cursor or change size.
+
+| Control | What it does |
+| --- | --- |
+| px / rem / em | Units, everywhere at once |
+| Dock icon | Moves the panel to the other edge, to reach what is under it |
+| Sun / moon | Light or dark |
+| ✕ | Closes the tool |
+| Section titles | Fold a section. Folded sections stay folded |
+| Trail under the selection | Click an ancestor to select it |
+| Footer | Says what the next click does, with a Clear button |
+
+The first time, the panel opens with three steps explaining the flow. They go
+away once you have kept a measurement, or when you dismiss them.
+
+Edge, theme, unit and folds persist across pages.
 
 ## Reaching the element you actually want
 
@@ -99,14 +174,16 @@ instead of on what you are looking at.
   outright. You are never pointing at something invisible.
 - One that does paint, like a faint scrim, is still the topmost thing, so
   **hold `Cmd` (macOS) or `Ctrl`** to reach the most specific element under the
-  cursor. Same idea as selecting through a group in Figma.
+  cursor. Same idea as selecting through a group in Figma. This applies while
+  nothing is locked; once A is locked the same key measures instead, and the
+  trail or `Alt` + scroll does the fine picking.
 - `Alt` + scroll then walks up and down from wherever you landed.
 
 ## Design tokens
 
-![A colour reported as --ink, with the hex underneath](docs/readme/font-size.png)
+![A paragraph at phone width, its colour reported as --ink-2 with the hex underneath](docs/readme/02-type-mobile.png)
 
-If the page is built on CSS custom properties, the card names the token rather
+If the page is built on CSS custom properties, the panel names the token rather
 than the value it resolved to: `--color-brand` instead of `#2A51FD`, with the
 hex still shown underneath. Click the name to copy `var(--color-brand)`, click
 the hex to copy `#2A51FD`.
@@ -125,9 +202,9 @@ shown as before.
 
 ## Media
 
-![An image reported with its format, ratio and asset scale](docs/readme/image-video-tag.png)
+![An avatar reported as a JPG, with its intrinsic size, ratio and asset scale](docs/readme/05-media.png)
 
-Hover an image or video and the card says which it is, what format it is being
+Hover an image or video and the panel says which it is, what format it is being
 served in, and how the asset compares to the box it is drawn in.
 
 - **Format** comes from `currentSrc`, the file the browser actually chose out of
@@ -142,7 +219,7 @@ served in, and how the asset compares to the box it is drawn in.
 
 ## What the measurements mean
 
-![An element measured inside its container, one number per edge](docs/readme/container-padding.png)
+![The vertical gap between two project titles, with the type of each](docs/readme/01-measure.png)
 
 - **Two elements side by side or stacked**: one gap number, drawn between the
   facing edges.
@@ -160,11 +237,25 @@ as their on-page highlights: the type spec for text, width and height for a box.
 
 ## Known limits
 
-- **Iframes.** The tool runs inside each frame independently. Measuring an
-  element in the page against one inside an iframe is not supported.
+- **The stage is a viewport, not a device.** It sets width and height. It does
+  not change the user agent, touch input, hover capability or pixel density,
+  so a site that serves different HTML to phones still serves the desktop one.
+- **No network throttling.** Chrome only offers that to extensions through the
+  `debugger` permission, which would put a warning on install and a banner on
+  every use. DevTools throttling works alongside this tool.
+- **The page loads twice on the stage.** The original stays underneath, paused
+  and covered, so analytics will count a second page view.
+- **The copy on the stage loads without the site's Content-Security-Policy.**
+  That header can only be removed whole, and it is where the framing rule
+  lives. A page that relies on its CSP to block one of its own scripts could
+  behave differently on the stage than in the tab.
+- **Where a page cannot be framed, the panel sits on it.** Whatever is under
+  the panel cannot be hovered until you flip it to the other edge.
+- **Iframes inside the page** are inspected as one element. The tool does not
+  reach into them.
 - **Highlight badges** show rendered size in px whatever the unit toggle says.
-  The card is the source of truth for converted values.
-- **Strict CSP sites** may refuse the bundled fonts, and the card falls back to
+  The panel is the source of truth for converted values.
+- **Strict CSP sites** may refuse the bundled fonts, and the panel falls back to
   system fonts. Everything else still works.
 - **Canvas and WebGL** are inspected as the element that contains them; there
   is no way to reach inside what they draw.
@@ -178,9 +269,9 @@ npm to run the tests.
 
 ```bash
 npm install         # Playwright plus the Chromium it drives, for the tests only
-npm test            # manifest checks, geometry units, then the browser suite
+npm test            # manifest, geometry and contrast checks, then both browser suites
 npm run test:unit   # geometry only, runs in a second, no browser
-npm run package     # builds dist/design-tool-<version>.zip for the Web Store
+npm run package     # builds dist/offpx-<version>.zip for the Web Store
 npm run dev         # builds ./dev/, a side-by-side copy for local testing
 ```
 
@@ -194,8 +285,8 @@ touching the version you actually use.
 What they would otherwise share is a name, an icon and a shortcut. `npm run
 dev` writes a `dev/` folder that fixes all three:
 
-- named **Design Tool (Dev)**
-- **black** icon (brand Ink) instead of brand blue
+- named **Offpx (Dev)**
+- the mark's drawer in **Ash** instead of Stray
 - **Alt+Shift+D**, leaving Alt+Shift+I to the published build
 
 Load `dev/` once via **Load unpacked**. After that, re-run `npm run dev` and
@@ -222,6 +313,9 @@ The mouse moves in small steps rather than teleporting. A scripted click jumps
 straight to its target, which is the one way a human never approaches anything,
 and it let an unreachable card ship once already.
 
+Under Playwright's headless Chromium the tests hold `Control`, since that is the
+modifier on the platform they run on.
+
 ## Layout
 
 ```
@@ -234,28 +328,34 @@ src/content/
   units.js                 px / rem / em conversion
   tokens.js                design token names for computed values
   measure.js               gap geometry, pure functions
+  target.js                which window is being inspected: the top one, or the stage's frame
   overlay.js               closed shadow root, highlights, dimension lines
-  card.js                  the card
+  stage.js                 the framed page, device sizes, the toolbar
+  card.js                  the panel's contents
   spacing-box.js           the margin/border/padding diagram
-  prefs.js                 persisted unit, theme, position, size
+  prefs.js                 persisted unit, theme, dock edge, folds
 src/ui/overlay-styles.js   all injected CSS, as a string
-src/icons/icon.svg         icon source, exported from Figma
-src/fonts/                 the two brand typefaces, with their OFL licences
+src/ui/logo.js             the Offpx lockup, from the brand kit
+src/icons/                 the brand kit's app icons, 16 to 128
+src/fonts/                 Geist and Geist Mono, with their OFL licence
+docs/brand/                logo and icon SVG sources from the brand kit
 test/fixture.html          a page with known-correct values to check against
-test/verify.mjs            end-to-end checks in a real Chromium
+test/verify.mjs            end-to-end checks in a real Chromium, page inspected in place
+test/stage.test.mjs        end-to-end checks of the stage, page served over http
 test/measure.test.mjs      geometry unit tests, no browser
+test/contrast.test.mjs     holds the palette to its contrast floors, no browser
 test/manifest.test.mjs     keeps the shipped manifest minimal
 test/build-test-extension.mjs  patched copy the browser suite drives
 test/package.mjs           builds the Web Store zip
-test/render-icons.mjs      regenerates the icon PNGs from icon.svg
 ```
 
 ## Licence
 
 Code is MIT, see [LICENSE](LICENSE).
 
-The bundled typefaces are SIL Open Font License 1.1, with their licence texts in
-`src/fonts/`. The Design Tool name and logo are not covered by the MIT licence.
+The bundled typefaces are SIL Open Font License 1.1, with their licence text in
+`src/fonts/`. The Offpx name and logo are not covered by the MIT licence; see the
+brand guidelines for how to use them.
 
 `DESIGN.md` is the visual system. `DECISIONS.md` is why things are the way they
 are, including the things that turned out to be wrong.

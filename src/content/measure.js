@@ -6,7 +6,7 @@
  * here: the numbers are always for what is on screen right now.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   const contains = (outer, inner) =>
     outer.left <= inner.left &&

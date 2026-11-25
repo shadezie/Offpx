@@ -6,7 +6,7 @@
  * hide, and a hardcoded base would report confidently wrong values there.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { prefs } = DT;
 
   const MODES = ['px', 'rem', 'em'];
@@ -39,7 +39,7 @@
 
     /** Re-read on activation and on resize: root size is often responsive. */
     refreshRoot() {
-      const size = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const size = parseFloat(DT.target.cs(DT.target.doc.documentElement).fontSize);
       if (Number.isFinite(size) && size > 0) rootFontSize = size;
       return rootFontSize;
     },
@@ -65,13 +65,6 @@
         return `${round(px / base)}em`;
       }
       return `${round(px)}px`;
-    },
-
-    /** Same as format() but always keeps the unit suffix, even for zero. */
-    formatStrict(px, elFontSize) {
-      if (!Number.isFinite(px)) return '-';
-      if (px === 0) return mode === 'px' ? '0px' : `0${mode}`;
-      return units.format(px, elFontSize);
     },
 
     /** Parse a computed CSS length ("12px", "normal", "") to a number or null. */

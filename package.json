@@ -1,13 +1,13 @@
 {
-  "name": "design-tool",
-  "version": "1.1.0",
+  "name": "offpx",
+  "version": "2.0.0",
   "private": true,
-  "description": "Chrome extension for design QA. The extension itself has no build step and no runtime dependencies; this file exists only for the end-to-end tests.",
+  "description": "Offpx, a Chrome extension for design QA. The extension itself has no build step and no runtime dependencies; this file exists only for the tests and build scripts.",
   "type": "module",
   "scripts": {
-    "test": "node test/manifest.test.mjs && node test/measure.test.mjs && node test/verify.mjs",
+    "test": "node test/manifest.test.mjs && node test/measure.test.mjs && node test/contrast.test.mjs && node test/verify.mjs && node test/stage.test.mjs",
     "test:unit": "node test/measure.test.mjs",
-    "test:e2e": "node test/verify.mjs",
+    "test:e2e": "node test/verify.mjs && node test/stage.test.mjs",
     "dev": "node test/build-dev.mjs",
     "package": "node test/package.mjs",
     "postinstall": "playwright install chromium",

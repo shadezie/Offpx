@@ -1,0 +1,15 @@
+/**
+ * The Offpx logo, for the tool's own chrome.
+ *
+ * Copied from the brand kit (02-lockup-horizontal, primary), not redrawn: the
+ * wordmark is outlined Geist Medium and must never be retyped. The body and
+ * wordmark take currentColor, so the same file is the primary colourway on
+ * light (Carbon) and the reversed one on dark (Warm paper). The drawer stays
+ * Stray in both, as the guidelines require.
+ */
+(() => {
+  const DT = (window.__offpx = window.__offpx || {});
+
+  DT.LOGO =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.00 -827.56 3373.78 977.56" class="logo" role="img" aria-label="Offpx"><rect x="0.00" y="-532.00" width="709.33" height="532.00" fill="currentColor"></rect><rect x="354.67" y="-827.56" width="472.89" height="236.44" fill="#FF5436"></rect><path transform="translate(901.78 0)" d="M375 16Q272 16 198.0 -28.5Q124 -73 84.0 -156.0Q44 -239 44 -354Q44 -469 84.0 -552.5Q124 -636 198.0 -681.0Q272 -726 375 -726Q479 -726 553.5 -681.0Q628 -636 667.5 -552.5Q707 -469 707 -354Q707 -239 667.5 -156.0Q628 -73 553.5 -28.5Q479 16 375 16ZM375 -83Q478 -83 536.5 -154.5Q595 -226 595 -354Q595 -482 536.5 -554.5Q478 -627 375 -627Q273 -627 214.5 -554.5Q156 -482 156 -354Q156 -226 214.5 -154.5Q273 -83 375 -83ZM845 0V-445H771V-532H845V-566Q845 -632 882.0 -671.0Q919 -710 997 -710H1092V-623H1012Q951 -623 951 -560V-532H1084V-445H951V0ZM1153 0V-445H1079V-532H1153V-566Q1153 -632 1190.0 -671.0Q1227 -710 1305 -710H1400V-623H1320Q1259 -623 1259 -560V-532H1392V-445H1259V0ZM1458 150V-532H1558L1560 -451Q1583 -497 1625.5 -520.5Q1668 -544 1721 -544Q1799 -544 1849.5 -505.5Q1900 -467 1924.5 -404.0Q1949 -341 1949 -266Q1949 -191 1924.5 -128.0Q1900 -65 1849.5 -26.5Q1799 12 1721 12Q1670 12 1628.0 -10.5Q1586 -33 1564 -72V150ZM1702 -80Q1766 -80 1802.5 -129.0Q1839 -178 1839 -266Q1839 -354 1802.5 -403.0Q1766 -452 1702 -452Q1638 -452 1601.0 -405.0Q1564 -358 1564 -266Q1564 -174 1601.0 -127.0Q1638 -80 1702 -80ZM1959 0 2152 -272 1967 -532H2085L2216 -341L2343 -532H2464L2281 -270L2472 0H2354L2217 -203L2079 0Z" fill="currentColor"></path></svg>';
+})();

@@ -5,6 +5,7 @@
  *   node test/manifest.test.mjs
  */
 import fs from 'node:fs';
+import vm from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTENT_FILES } from './build-test-extension.mjs';
@@ -25,10 +26,14 @@ check('has a version', /^\d+\.\d+\.\d+$/.test(manifest.version || ''), manifest.
 // The whole point of the activeTab design: no broad host access, nothing
 // injected until the user asks for it.
 check('asks for no host permissions', manifest.host_permissions === undefined);
+check('asks for no optional host permissions either', manifest.optional_host_permissions === undefined);
 check('declares no always-on content script', manifest.content_scripts === undefined);
 check(
   'permissions stay minimal',
-  JSON.stringify(manifest.permissions) === JSON.stringify(['activeTab', 'scripting', 'storage']),
+  // The fourth lets the stage frame sites that forbid framing. It was tried
+  // without: a site sending X-Frame-Options: DENY fell back every time.
+  JSON.stringify(manifest.permissions) ===
+    JSON.stringify(['activeTab', 'scripting', 'storage', 'declarativeNetRequestWithHostAccess']),
   JSON.stringify(manifest.permissions)
 );
 
@@ -41,6 +46,18 @@ const workerSource = fs.readFileSync(path.join(ROOT, background), 'utf8');
 for (const file of CONTENT_FILES) {
   check(`worker injects ${file}`, workerSource.includes(file));
   check(`${file} exists`, fs.existsSync(path.join(ROOT, file)));
+  // A file that does not parse takes every file after it down with it, and
+  // the stylesheet is one long template string: a stray backtick in a CSS
+  // comment is all it takes.
+  let parses = true;
+  let why = '';
+  try {
+    new vm.Script(fs.readFileSync(path.join(ROOT, file), 'utf8'), { filename: file });
+  } catch (err) {
+    parses = false;
+    why = err.message;
+  }
+  check(`${file} parses`, parses, why);
 }
 
 for (const size of ['16', '32', '48', '128']) {
@@ -50,7 +67,15 @@ for (const size of ['16', '32', '48', '128']) {
 
 // OFL 1.1 requires the licence text to ship alongside the fonts.
 const fonts = fs.readdirSync(path.join(ROOT, 'src', 'fonts'));
-check('font licences ship with the fonts', fonts.filter((f) => f.startsWith('OFL-')).length === 2);
+check('the font licence ships with the fonts', fonts.includes('OFL-Geist.txt'));
+for (const file of ['geist-400.woff2', 'geist-500.woff2', 'geist-mono-400.woff2']) {
+  check(`${file} ships`, fonts.includes(file));
+}
+// The toolbar sizes the brand kit hand-fits, as well as the manifest's own.
+for (const size of ['16', '20', '24', '32']) {
+  const icon = manifest.action?.default_icon?.[size];
+  check(`toolbar icon ${size} exists`, !!icon && fs.existsSync(path.join(ROOT, icon)));
+}
 check('a project licence exists', fs.existsSync(path.join(ROOT, 'LICENSE')));
 
 console.log(failures.length ? `\n${failures.length} FAILED` : '\nall checks passed');

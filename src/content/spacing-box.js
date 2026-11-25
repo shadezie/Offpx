@@ -1,12 +1,12 @@
 /**
- * The spacing box: margin -> border -> padding -> content, drawn as nested
- * rings the way Figma and the DevTools box model do it.
+ * The spacing box: margin -> padding -> content, drawn as nested rings the way
+ * Figma and the DevTools box model do it. Border is stated as a row under it.
  *
  * Zero sides are dimmed rather than hidden, so the diagram keeps a stable
  * shape and stays scannable while you move between elements.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -31,10 +31,17 @@
 
       const wrap = el('div', 'sbox');
       wrap.appendChild(
-        ring('margin', 'Margin', margin, ring('border', 'Border', border, ring('padding', 'Padding', padding, content, ctx), ctx), ctx)
+        ring('Margin', margin, ring('Padding', padding, content, ctx), ctx)
       );
 
       const notes = el('dl', 'sbox-note');
+      // Border is a row, not a ring. It is almost always 0 or 1px, and a whole
+      // ring of zeros was a third of the diagram.
+      const sides = [border.top, border.right, border.bottom, border.left];
+      if (sides.some((px) => px > 0)) {
+        const uniform = sides.every((px) => px === sides[0]);
+        addNote(notes, 'Border', uniform ? ctx.fmt(sides[0]) : sides.map(ctx.fmt).join(' '), ctx);
+      }
       if (radiusUniform) {
         if (radius.topLeft) addNote(notes, 'Radius', ctx.fmt(radius.topLeft), ctx);
       } else {
@@ -71,8 +78,8 @@
     list.appendChild(dd);
   }
 
-  function ring(kind, label, box, inner, ctx) {
-    const node = el('div', `ring ring-${kind}`);
+  function ring(label, box, inner, ctx) {
+    const node = el('div', 'ring');
     node.appendChild(el('span', 'ring-label', label));
     node.appendChild(side(box.top, ctx));
 

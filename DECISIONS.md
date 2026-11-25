@@ -324,8 +324,8 @@ files.
 - Cross-frame measurement (element in the page vs element inside an iframe).
 - Whether the highlight badge should honour the unit toggle, or stay px as a
   "rendered size" readout. Currently px.
-- A pinned panel mode for reviewing many elements in sequence without the card
-  moving at all.
+- ~~A pinned panel mode for reviewing many elements in sequence without the card
+  moving at all.~~ Done, see "v2: the side panel".
 - Design token matching: flag when a value is off-scale for the site's own
   spacing or type ramp.
 
@@ -379,3 +379,258 @@ differ and only one of them is the file the visitor downloads. Asset scale is
 intrinsic over rendered, which catches both the blurry upscale and the 3x asset
 in a 100px slot. And a muted autoplay loop with no controls is called a
 background loop, because calling it "video" implies something a visitor plays.
+
+## v2: the side panel
+
+The first half of v2. The second half is the stage, further down: the page
+framed at a device size beside the panel.
+
+### The floating card became a docked panel
+
+A scripted walkthrough at five window sizes measured what the card cost. It
+took 24% of a 1440px window and 69% of a 500px one, sat on top of the elements
+being inspected, and ran from 672 to 853px tall across five elements, so
+whatever you were reading moved on every hover. It also showed nothing at all
+until the first hover, so a new user had no sign the tool was on.
+
+The panel is docked to an edge at full height and is there from the first
+frame. That removed the grip, the pin, the resize handle, the corner logic and
+the dozen tests that guarded them. All of it existed only because the card
+floated.
+
+It still sits on the page rather than beside it, so what is under it cannot be
+hovered. A dock button flips it to the other edge. Squeezing the page with a
+margin instead was rejected: the layout narrows but media queries still see the
+full window, so you would be measuring a layout no real screen produces. The
+arena fixes this properly by giving the page its own viewport.
+
+### A measurement waits for Cmd or Ctrl
+
+Reported from real use: with A locked, every hover drew a dimension line and
+rewrote the panel, and that is most of what a mouse does. The measurement now
+appears only while the key is held, and a click with the key held keeps it.
+
+Two things followed from that.
+
+A plain click with A locked used to set B. It now selects the clicked element
+as the new A, because with measuring moved to the key there is nothing else a
+plain click should mean.
+
+Cmd and Ctrl already meant "select through overlays". The two meanings are
+split by state: select-through while nothing is locked, measure once A is.
+Doing both at once was rejected, because the element under the cursor would
+change the moment the key went down, which is the moment you are trying to
+measure against it. With A locked, the trail and `Alt` + scroll do the fine
+picking.
+
+The key state is reset on window blur. Cmd+Tab away and the keyup is delivered
+to another window, so the tool would otherwise come back measuring.
+
+### Esc clears and never closes
+
+Esc used to clear, then exit on the next press. One press too many ended the
+session. It now only clears, and with nothing selected it is not swallowed at
+all, so the page gets its Esc back. Closing is the ✕ or the toolbar icon.
+
+### Shortcuts work wherever focus is
+
+Found by the new tests. Clicking a control on the panel leaves focus inside
+it, and keys from our own UI were ignored, so `U` stopped working after any
+click on the panel. The panel has no text fields to protect, so the keys are
+handled regardless of where focus is.
+
+### The palette grew status colours and a third tier
+
+v1 had one accent and two greys. That left no way to say "this is wrong":
+missing alt text and present alt text were the same colour. There are now
+three status colours with one rule, that they only ever mean something was
+checked, plus three grounds and three text tiers so raised, sunken and dimmed
+each have a token.
+
+On the page, the dimension line moved to a deeper pink to carry white text at
+4.5:1, and every mark gained a light halo so it survives a page of its own
+colour. `test/contrast.test.mjs` reads the tokens from the shipped stylesheet
+and fails if a pair drops below its floor.
+
+### Legibility has a test
+
+50 of 74 text elements on the card were under 11px. The panel has a 10px
+floor for uppercase labels and 12px for values, 24px for click targets, and
+every copyable value is a focusable control. The browser suite asserts all
+three, because none of them survive a redesign otherwise.
+
+## v2: Quiet and Ink
+
+The first panel looked like a tool trying to look like a tool: bordered tiles,
+uppercase mono labels, a tinted first-run block, a four-colour box model. Three
+directions were drawn against inspector panels from Jitter, Framer, Subframe,
+Linear, Rive and MagicPath, and two were chosen as one system: Quiet in light,
+Ink in dark.
+
+What they share is the decision that matters: no containers. Hairlines and
+type weight carry the structure, and the numbers carry the emphasis. Numbers
+are sans in both themes, with tabular figures; mono is kept for what is
+actually code.
+
+## v2: the stage
+
+### The page is framed, not emulated
+
+Turning the tool on loads the same URL into a same-origin iframe beside the
+panel, and the inspector reads that frame. An iframe has a viewport of its own,
+so a 390px frame gets the page's real 390px layout: media queries, `vh`,
+container sizes.
+
+Three other routes were ruled out.
+
+- **`chrome.debugger` emulation** is true device emulation, and it is also the
+  permission with the heaviest install warning and a "started debugging this
+  browser" banner on every use. It would end the three-permission install.
+- **Resizing the browser window** needs no permission and cannot scale: a
+  1920px view does not fit on a laptop.
+- **Squeezing the live page with a margin** narrows the layout while media
+  queries still see the full window, which is a layout no real screen produces.
+
+The cost of the frame is listed in the README: the page loads a second time,
+in-memory state starts over, and the stage sets a viewport, not a user agent
+or a pixel density.
+
+### One seam: `DT.target`
+
+Every module read `window` and `document` directly. They now read
+`DT.target`, which is the top window until the stage hands over its frame.
+Computed styles are asked of the element's own window, because a style read
+through the wrong one resolves media queries against the wrong viewport, and
+that is the one mistake a device frame cannot make.
+
+Highlights and dimension lines moved with it. They are drawn in a second
+shadow root inside the framed document, so they scroll with the page and are
+scaled by the same transform. Drawing them in the top layer would have meant
+mapping every rect through the zoom on every frame.
+
+### A frame attached without a source looks like a refusal
+
+Found by the first run of the stage tests. An iframe appended before its `src`
+is set loads `about:blank` and fires `load` for it. That document is not http,
+which is exactly how a refused frame is recognised, so the stage gave up before
+the real page had started loading. The source is set before the frame is
+attached.
+
+### Refusal is detected, not predicted
+
+There is no way to know in advance whether a site allows framing. The stage
+tries, and a frame whose document cannot be read is a refusal: `X-Frame-Options:
+DENY`, `frame-ancestors 'none'`, a CSP that forbids `frame-src`, or a `file://`
+page. The tool then inspects in place and says why device sizes are missing. A
+ten second timeout covers a frame that never loads at all.
+
+### Only the top window answers the toolbar
+
+The stage frames the page inside itself. If the framed copy also ran the tool,
+it would open a stage of its own. Subframes ignore the toggle, which also ends
+the old behaviour of each iframe running an independent copy.
+
+### Interact is the tool standing down, not a second mode of it
+
+While inspecting, the page gets no clicks. Interact returns them, so a menu can
+be opened or a link followed, and the frame's next `load` re-points the
+inspector at the new document. In Interact every key belongs to the page too:
+someone typing "u" into a form is not asking to change units.
+
+### Fit is where it opens
+
+Opening straight at a device size would change the page the moment the tool
+is turned on. Fit is the largest size the stage can show at 100%, so the first
+thing a user sees is their page, framed, unchanged.
+
+### No network throttling
+
+Asked for, and declined for the same reason as debugger emulation: it is only
+available through that permission. DevTools does it well and works alongside
+this tool. A separate build with the debugger permission remains an option if
+slow-network QA turns out to matter enough.
+
+### A fourth permission, to lift framing headers
+
+Reported from the first real site it was tried on: `X-Frame-Options: DENY`, so
+the stage stayed empty and the tool fell back to the panel sitting on the page.
+Another device-preview extension worked on the same site, because it removes
+that header. Refusing to do the same would have meant the headline feature not
+working on a large share of real sites.
+
+So there is now one `declarativeNetRequest` session rule, as narrow as the API
+allows: the one tab, sub-frames only, requests to the tab's own host only,
+added when the tool is turned on and removed when it is turned off. It removes
+`X-Frame-Options` and `Content-Security-Policy`. The second is removed whole
+because that is all the API can do, and `frame-ancestors` lives inside it.
+
+`declarativeNetRequestWithHostAccess` rather than the plain permission, so the
+rule only applies where the user has granted access by activating the tool.
+Whether the `activeTab` grant alone satisfies that could not be tested in the
+headless suite, which cannot click the toolbar, and has to be confirmed in a
+real browser. If it does not, the next step is a per-site prompt.
+
+The slow-page fix made on the way to this diagnosis was a real bug, but it was
+not this one. The lesson was to read the response headers before theorising.
+
+### The fourth permission was tried without, and kept
+
+Confirmed in a real browser on both counts. With the permission, the
+`activeTab` grant alone is enough for the rule to apply: a site sending
+`X-Frame-Options: DENY` loaded on the stage with no extra prompt. Without it,
+on the same site, the tool fell back to the panel sitting on the page every
+time. So it ships with four.
+
+### The worker asks the page whether the tool is on
+
+The worker kept its own record of which tabs were on and cleared it when a tab
+reported loading. The stage loads a frame, and a frame loading can look like
+that. A record knocked out of step makes the next toolbar click send "turn on"
+to a tool that is already on, which looks like a dead button. The click now
+asks the content script for its state and toggles from the answer.
+
+### The font URLs change every session
+
+The bundled typefaces have to be web-accessible, because the page's own
+document fetches them. With a fixed URL, any website could request one and
+learn that this extension is installed. `use_dynamic_url` gives the files an
+address that changes per session, so there is nothing stable to probe. A test
+asserts the faces still load.
+
+### A cleanup before the move
+
+Removed what nothing used any more: a ground token kept "for emphasis", a row
+tone, a unit formatter, a mount check, two exports and a parameter. A scan for
+unsafe DOM writes found two `innerHTML` sites, both fed only by the static icon
+tables in the same file.
+
+## Renamed Offpx
+
+"Design Tool" named a category, not a product, and could not be searched for.
+The name is now Offpx, said off-pix: off, as in off by one, and px. The brand
+(mark, lockup, palette, type, voice) is defined in the Offpx Brand Guidelines
+v1.0 and its kit; the product takes from it rather than restating it.
+
+- **Logo and icons come from the kit files.** The lockup is inlined as the
+  kit's SVG, and the Chrome icons are the kit's hand-fitted PNGs. Nothing is
+  redrawn, because the guidelines say so and because a redrawn 16px icon loses
+  the one-pixel seam the mark depends on.
+- **Type is Geist and Geist Mono**, 400 and 500, cut to Latin and converted to
+  WOFF2. Semibold is gone from the panel because the brand does not use it.
+- **The palette moved to Carbon, Warm paper, Graphite and Ash.** Stray is not
+  a UI colour: the guidelines keep it for the mark's drawer, one per surface.
+  Selection blue, the measurement pink and the status colours stay, because
+  they are functional, which the guidelines allow explicitly.
+- **Internal names followed the product name**: the page-visible host id, the
+  message types and the storage key. Preferences saved under the old key are
+  read once so nobody loses their settings.
+- **The source moved to github.com/shadezie/Offpx.** The Web Store listing is
+  tied to the developer account, so it keeps its ID and installs and is
+  renamed in place.
+
+### What is deliberately not here yet
+
+- Remembering a stage size per site rather than globally.
+- Remembering a stage size per site rather than globally.
+- New README and store screenshots. The existing ones are hand-made captures
+  of real sites and show the old card.
