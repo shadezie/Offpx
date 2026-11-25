@@ -1,6 +1,6 @@
 # Privacy Policy — Offpx
 
-**Last updated: September 2026**
+**Last updated: November 2026**
 
 Offpx is a Chrome extension for inspecting the visual styling of web
 pages. This policy explains, plainly, what it does and does not do with your
@@ -9,14 +9,19 @@ data.
 ## What Offpx does
 
 Offpx reads the computed CSS styles and element geometry of the page you
-are actively inspecting, so it can show that information in its on-page card.
+are actively inspecting, so it can show that information in its side panel.
 This happens entirely inside your browser, on the single tab you activated it
 on.
 
+To show that page at a device size, Offpx loads it a second time into a frame
+beside the panel. That request goes from your browser to the same site you are
+already on, exactly as a refresh would, with your own cookies. Nothing about it
+is sent to the developer or to anyone else.
+
 ## What Offpx does not do
 
-- It makes **no network requests**. There is nothing to intercept, because
-  nothing is ever sent anywhere.
+- It makes **no network requests of its own**. Apart from reloading the page
+  you are on into its frame, nothing is ever sent anywhere.
 - It does not collect, log, or transmit anything about the pages you visit,
   their content, or your activity on them.
 - No analytics, no telemetry, no tracking, no crash reporting to a third
@@ -30,7 +35,13 @@ Chrome's local storage API, entirely on your device:
 
 - Your chosen unit (px, rem, or em)
 - Light or dark theme
-- The inspector panel's position and size
+- Which edge of the window the panel docks to
+- Which sections of the panel you have folded
+- Whether you have seen the first-run steps
+- The device size you last used on the stage
+
+Earlier versions stored the same kind of preferences under the name Design
+Tool. Offpx reads those once, so your settings carry over.
 
 None of this leaves your browser. It is never transmitted anywhere, and the
 developer has no access to it, no way to see it, and no copy of it.
