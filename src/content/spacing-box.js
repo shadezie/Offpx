@@ -6,7 +6,7 @@
  * shape and stays scannable while you move between elements.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   function el(tag, className, text) {
     const node = document.createElement(tag);

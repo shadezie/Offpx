@@ -6,7 +6,7 @@
  * hide, and a hardcoded base would report confidently wrong values there.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { prefs } = DT;
 
   const MODES = ['px', 'rem', 'em'];

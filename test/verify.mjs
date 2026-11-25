@@ -45,7 +45,7 @@ await page.waitForTimeout(500);
 const arm = () =>
   sw.evaluate(async () => {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    return chrome.tabs.sendMessage(tab.id, { type: 'designtool:toggle', armed: true });
+    return chrome.tabs.sendMessage(tab.id, { type: 'offpx:toggle', armed: true });
   });
 
 const { width: VW, height: VH } = page.viewportSize();
@@ -56,7 +56,7 @@ const PANEL_W = 360;
  *
  * The overlay lives in a closed shadow root, so page.evaluate cannot reach it.
  * executeScript with world: 'ISOLATED' lands in the same world as the content
- * script, which is the one place `window.__designtool` exists. No test-only
+ * script, which is the one place `window.__offpx` exists. No test-only
  * hook in the shipped code, and the closed root stays closed to the page.
  */
 const ask = (kind, arg) =>
@@ -68,7 +68,7 @@ const ask = (kind, arg) =>
         world: 'ISOLATED',
         args: [kind, arg ?? null],
         func: (kind, arg) => {
-          const overlay = window.__designtool?.overlay;
+          const overlay = window.__offpx?.overlay;
           const panel = overlay?.panel;
           if (!panel) return null;
           const rectOf = (node) => {
@@ -77,7 +77,7 @@ const ask = (kind, arg) =>
             return { x: b.x, y: b.y, width: b.width, height: b.height, cx: b.x + b.width / 2, cy: b.y + b.height / 2 };
           };
           if (kind === 'fonts') {
-            return [...document.fonts].filter((f) => f.family.includes('Design Tool') && f.status === 'loaded').length;
+            return [...document.fonts].filter((f) => f.family.includes('Offpx') && f.status === 'loaded').length;
           }
           if (kind === 'text') return panel.textContent;
           if (kind === 'rect') return rectOf(arg ? panel.querySelector(arg) : panel);
@@ -149,7 +149,7 @@ async function glide(to, steps = 25) {
 
 await arm();
 await page.waitForTimeout(300);
-check('arms', await page.evaluate(() => !!document.getElementById('designtool-root')));
+check('arms', await page.evaluate(() => !!document.getElementById('offpx-root')));
 
 // ---- the panel is there before anything is hovered -----------------------
 // v1 showed nothing until the first hover: no sign the tool was on, and no
@@ -332,7 +332,7 @@ await page.waitForTimeout(250);
 check('Esc clears the measurement', (await ask('count', '.mlabel')) === 0);
 await page.keyboard.press('Escape');
 await page.waitForTimeout(250);
-check('a second Esc does not close the tool', await page.evaluate(() => !!document.getElementById('designtool-root')));
+check('a second Esc does not close the tool', await page.evaluate(() => !!document.getElementById('offpx-root')));
 
 // A plain click with A locked selects the new element instead.
 await glide({ x: c1.x + 40, y: c1.y + 40 });
@@ -349,7 +349,7 @@ check('the Clear button releases the selection', (await panelText()).includes('C
 await press('.close');
 check(
   'close button stops the tool',
-  await page.evaluate(() => !document.getElementById('designtool-root'))
+  await page.evaluate(() => !document.getElementById('offpx-root'))
 );
 await arm(); // back on for the rest of the run
 await page.waitForTimeout(300);
@@ -449,12 +449,12 @@ check('link does not navigate while armed', page.url().endsWith('fixture.html'),
 // ---- teardown ------------------------------------------------------------
 await sw.evaluate(async () => {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  return chrome.tabs.sendMessage(tab.id, { type: 'designtool:toggle', armed: false });
+  return chrome.tabs.sendMessage(tab.id, { type: 'offpx:toggle', armed: false });
 });
 await page.waitForTimeout(400);
 check(
   'overlay fully removed when the toolbar turns it off',
-  await page.evaluate(() => !document.getElementById('designtool-root'))
+  await page.evaluate(() => !document.getElementById('offpx-root'))
 );
 
 // MV3 evicts an idle service worker, and the armed-per-tab state used to be an

@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 globalThis.window = {};
 new Function(fs.readFileSync(path.join(HERE, '..', 'src', 'content', 'measure.js'), 'utf8'))();
-const measure = window.__designtool.measure;
+const measure = window.__offpx.measure;
 
 const rect = (left, top, width, height) => ({
   left,

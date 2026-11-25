@@ -1,5 +1,5 @@
 /**
- * Design Tool - service worker.
+ * Offpx - service worker.
  *
  * Owns the armed/idle state per tab. The content script is stateless about
  * activation: it does what this worker tells it to do.
@@ -7,6 +7,7 @@
 
 const CONTENT_FILES = [
   'src/ui/overlay-styles.js',
+  'src/ui/logo.js',
   'src/content/prefs.js',
   'src/content/target.js',
   'src/content/units.js',
@@ -78,7 +79,7 @@ async function send(tabId, message) {
  */
 async function contentState(tabId) {
   try {
-    const reply = await send(tabId, { type: 'designtool:ping' });
+    const reply = await send(tabId, { type: 'offpx:ping' });
     return reply?.state || 'idle';
   } catch {
     return null;
@@ -98,7 +99,7 @@ async function inject(tabId) {
     });
     return true;
   } catch (err) {
-    console.warn('[Design Tool] cannot inject into this page:', err.message);
+    console.warn('[Offpx] cannot inject into this page:', err.message);
     return false;
   }
 }
@@ -149,7 +150,7 @@ async function allowFraming(tab) {
   } catch (err) {
     // Without the rule a site that forbids framing is inspected in place,
     // which is where it was before. Never a reason to fail the toggle.
-    console.warn('[Design Tool] could not prepare the stage:', err.message);
+    console.warn('[Offpx] could not prepare the stage:', err.message);
   }
 }
 
@@ -183,7 +184,7 @@ async function toggle(tab) {
   if (armed) await allowFraming(tab);
 
   try {
-    await send(tabId, { type: 'designtool:toggle', armed });
+    await send(tabId, { type: 'offpx:toggle', armed });
   } catch {
     // Frame went away between injection and message; drop the state.
     await setOff(tabId);
@@ -202,7 +203,7 @@ chrome.action.onClicked.addListener(toggle);
 
 // The content script turns itself off from its close button; follow it.
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg?.type === 'designtool:disarmed' && sender.tab?.id != null) {
+  if (msg?.type === 'offpx:disarmed' && sender.tab?.id != null) {
     setOff(sender.tab.id);
   }
   // Always answer. A listener that returns without responding closes the port,

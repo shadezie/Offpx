@@ -6,9 +6,12 @@
  * short debounce.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
-  const KEY = 'designtool.prefs';
+  const KEY = 'offpx.prefs';
+  // Where preferences lived before the rename. Read when nothing is stored
+  // under the new key, so nobody loses their theme or units.
+  const LEGACY_KEY = 'designtool.prefs';
   const DEFAULTS = {
     unit: 'px',
     theme: 'dark',
@@ -49,8 +52,9 @@
 
     async load() {
       try {
-        const stored = await chrome.storage?.local?.get(KEY);
-        if (stored?.[KEY]) state = { ...DEFAULTS, ...stored[KEY] };
+        const stored = await chrome.storage?.local?.get([KEY, LEGACY_KEY]);
+        const saved = stored?.[KEY] || stored?.[LEGACY_KEY];
+        if (saved) state = { ...DEFAULTS, ...saved };
       } catch {
         // Keep the defaults.
       }

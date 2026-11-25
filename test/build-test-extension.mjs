@@ -19,6 +19,7 @@ const ROOT = path.join(HERE, '..');
 
 export const CONTENT_FILES = [
   'src/ui/overlay-styles.js',
+  'src/ui/logo.js',
   'src/content/prefs.js',
   'src/content/target.js',
   'src/content/units.js',
@@ -34,7 +35,7 @@ export const CONTENT_FILES = [
 ];
 
 export function buildTestExtension() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'design-tool-test-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'offpx-test-'));
   fs.cpSync(path.join(ROOT, 'src'), path.join(dir, 'src'), { recursive: true });
 
   const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));

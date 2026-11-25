@@ -57,7 +57,7 @@ page.on('console', (m) => m.type() === 'error' && errors.push(`console: ${m.text
 const toggle = (armed) =>
   sw.evaluate(async (armed) => {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-    return chrome.tabs.sendMessage(tab.id, { type: 'designtool:toggle', armed }, { frameId: 0 });
+    return chrome.tabs.sendMessage(tab.id, { type: 'offpx:toggle', armed }, { frameId: 0 });
   }, armed);
 
 /**
@@ -89,7 +89,7 @@ const ask = (kind, arg) =>
         world: 'ISOLATED',
         args: [kind, arg ?? null],
         func: (kind, arg) => {
-          const overlay = window.__designtool?.overlay;
+          const overlay = window.__offpx?.overlay;
           const root = overlay?.shadowRoot;
           if (!root) return null;
           const frame = root.querySelector('.frame');
@@ -112,7 +112,7 @@ const ask = (kind, arg) =>
           if (kind === 'scrollbar') {
             const doc = frame.contentDocument;
             return {
-              styled: !!doc.getElementById('designtool-frame'),
+              styled: !!doc.getElementById('offpx-frame'),
               // With no scrollbar taking room, the layout width is the frame's width.
               gutter: frame.contentWindow.innerWidth - doc.documentElement.clientWidth,
             };
@@ -123,7 +123,7 @@ const ask = (kind, arg) =>
             const bar = root.querySelector('.tb').getBoundingClientRect();
             const mid = root.querySelector('.tb-mid').getBoundingClientRect();
             const brand = root.querySelector('.tb-brand').getBoundingClientRect();
-            return { offCentre: Math.abs(mid.x + mid.width / 2 - (bar.x + bar.width / 2)), brandLeft: brand.x - bar.x, name: root.querySelector('.tb-name')?.textContent };
+            return { offCentre: Math.abs(mid.x + mid.width / 2 - (bar.x + bar.width / 2)), brandLeft: brand.x - bar.x, name: root.querySelector('.tb-brand .logo')?.getAttribute('aria-label') };
           }
           if (kind === 'pressed') return root.querySelector('.seg [aria-pressed="true"]')?.textContent;
           if (kind === 'animations') return root.querySelector('.turn')?.getAnimations().length ?? 0;
@@ -184,7 +184,7 @@ async function pickSize(index) {
       world: 'ISOLATED',
       args: [index],
       func: (index) => {
-        const list = window.__designtool.overlay.shadowRoot.querySelector('.size-list');
+        const list = window.__offpx.overlay.shadowRoot.querySelector('.size-list');
         list.value = String(index);
         list.dispatchEvent(new Event('change', { bubbles: true }));
       },
@@ -208,7 +208,7 @@ await page.screenshot({ path: `${OUT}/stage-fit-dark.png` });
 
 // The toolbar: the name at the left edge, the controls centred in the stage.
 const tb = await ask('toolbar');
-check('the toolbar carries the name at its left edge', tb.name === 'Design Tool' && tb.brandLeft < 20, JSON.stringify(tb));
+check('the toolbar carries the name at its left edge', tb.name === 'Offpx' && tb.brandLeft < 20, JSON.stringify(tb));
 check('and its controls are centred', tb.offCentre < 2, `${tb.offCentre}px off`);
 check('on the stage the panel is titled for what it holds', (await ask('title')) === 'Properties');
 
@@ -351,7 +351,7 @@ check('the tab itself stays where it was', page.url() === `${ORIGIN}/`, page.url
 // ---- closing --------------------------------------------------------------
 await toggle(false);
 await page.waitForTimeout(500);
-check('closing removes the stage', await page.evaluate(() => !document.getElementById('designtool-root')));
+check('closing removes the stage', await page.evaluate(() => !document.getElementById('offpx-root')));
 check('and gives the page its scrolling back', await page.evaluate(() => document.documentElement.style.overflow !== 'hidden'));
 
 // The size is remembered for next time.
@@ -369,7 +369,7 @@ await page.waitForTimeout(400);
 await toggle(true);
 await page.waitForTimeout(1500);
 check('a page that forbids framing is inspected in place', (await ask('mode')) === 'inplace' && (await ask('count', '.frame')) === 0);
-check('in place, the panel carries the product name', (await ask('title')) === 'Design Tool');
+check('in place, the panel carries the product name', (await ask('title')) === 'Offpx');
 check('the panel says why device sizes are missing', (await ask('text')).includes('does not allow device preview'));
 const title = await page.locator('#hero-title').boundingBox();
 await glide({ x: title.x + 120, y: title.y + 24 });
@@ -402,7 +402,7 @@ check('the page itself still refuses frames from anyone else', (await page.evalu
 // of on and off, which a loading frame could knock out of step.
 await toolbar();
 await page.waitForTimeout(500);
-check('a second toolbar click turns it off', await page.evaluate(() => !document.getElementById('designtool-root')));
+check('a second toolbar click turns it off', await page.evaluate(() => !document.getElementById('offpx-root')));
 check('and the rule is removed with it', (await framingRules()) === 0);
 
 // ---- a page that is slow, not refusing -------------------------------------

@@ -10,7 +10,7 @@
  * rebuilt when the selection changes.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { units, styles, spacingBox, prefs, overlay } = DT;
 
   const IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
@@ -360,8 +360,13 @@
       foot.textContent = '';
 
       const brand = el('div', 'brand');
-      brand.appendChild(el('span', 'brand-mark'));
-      const title = el('span', 'brand-name', 'Design Tool');
+      // In place the panel carries the logo. On the stage the toolbar does, and
+      // the panel is titled for what it holds.
+      const logo = el('span', 'brand-logo');
+      // Static markup from the brand kit (src/ui/logo.js), never page content.
+      logo.innerHTML = DT.LOGO;
+      brand.appendChild(logo);
+      const title = el('span', 'brand-name', 'Offpx');
       brand.appendChild(title);
       head.appendChild(brand);
 
@@ -397,7 +402,7 @@
       });
       head.appendChild(side);
       head.appendChild(theme);
-      head.appendChild(iconButton('close', ICONS.close, 'Close Design Tool', () => handlers.onClose()));
+      head.appendChild(iconButton('close', ICONS.close, 'Close Offpx', () => handlers.onClose()));
 
       const dot = el('span', 'status-dot');
       const text = el('span', 'status-text');

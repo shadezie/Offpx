@@ -6,7 +6,7 @@
  * spacing gets a percentage, colors get hex.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { parse } = DT.units;
 
   const WEIGHT_NAMES = {

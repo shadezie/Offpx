@@ -67,7 +67,15 @@ for (const size of ['16', '32', '48', '128']) {
 
 // OFL 1.1 requires the licence text to ship alongside the fonts.
 const fonts = fs.readdirSync(path.join(ROOT, 'src', 'fonts'));
-check('font licences ship with the fonts', fonts.filter((f) => f.startsWith('OFL-')).length === 2);
+check('the font licence ships with the fonts', fonts.includes('OFL-Geist.txt'));
+for (const file of ['geist-400.woff2', 'geist-500.woff2', 'geist-mono-400.woff2']) {
+  check(`${file} ships`, fonts.includes(file));
+}
+// The toolbar sizes the brand kit hand-fits, as well as the manifest's own.
+for (const size of ['16', '20', '24', '32']) {
+  const icon = manifest.action?.default_icon?.[size];
+  check(`toolbar icon ${size} exists`, !!icon && fs.existsSync(path.join(ROOT, icon)));
+}
 check('a project licence exists', fs.existsSync(path.join(ROOT, 'LICENSE')));
 
 console.log(failures.length ? `\n${failures.length} FAILED` : '\nall checks passed');

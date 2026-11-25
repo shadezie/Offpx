@@ -1,12 +1,12 @@
 /**
- * Design Tool - content script entry.
+ * Offpx - content script entry.
  *
  * Owns the state machine (idle -> armed -> lockedA -> lockedAB) and the paint
  * loop. Rects are re-read every frame while armed, which is what keeps the
  * measurement attached through scrolling, sticky headers and layout shifts.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   if (DT.booted) return;
   DT.booted = true;
 
@@ -358,7 +358,7 @@
     overlay.attachMarks(doc);
     units.refreshRoot();
     DT.tokens?.invalidate();
-    card.setTitle(info.framed ? 'Properties' : 'Design Tool');
+    card.setTitle(info.framed ? 'Properties' : 'Offpx');
     loading = false;
     // On the stage the page starts out usable, and inspecting is asked for.
     // In place there is no switch, so there it inspects straight away.
@@ -394,7 +394,7 @@
 
     if (notify) {
       try {
-        chrome.runtime.sendMessage({ type: 'designtool:disarmed' })?.catch(() => {
+        chrome.runtime.sendMessage({ type: 'offpx:disarmed' })?.catch(() => {
           // The worker may be asleep. Its state resyncs on the next toggle.
         });
       } catch {
@@ -404,15 +404,15 @@
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.type === 'designtool:ping' && window !== window.top) return false;
-    if (message?.type === 'designtool:ping') {
+    if (message?.type === 'offpx:ping' && window !== window.top) return false;
+    if (message?.type === 'offpx:ping') {
       sendResponse({ ok: true, state });
       return false;
     }
     // The stage frames this page inside itself, and the frame must not start
     // a stage of its own. Only the top window answers the toolbar.
-    if (message?.type === 'designtool:toggle' && window !== window.top) return false;
-    if (message?.type === 'designtool:toggle') {
+    if (message?.type === 'offpx:toggle' && window !== window.top) return false;
+    if (message?.type === 'offpx:toggle') {
       if (message.armed) arm().then(() => sendResponse({ ok: true, state }));
       else {
         disarm(false);

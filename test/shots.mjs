@@ -8,10 +8,11 @@
  */
 import { chromium } from 'playwright';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import { buildTestExtension } from './build-test-extension.mjs';
 
-const HERE = '/home/user/design-tool/test';
+const HERE = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(HERE, 'shots');
 fs.mkdirSync(OUT, { recursive: true });
 const EXT = buildTestExtension();
@@ -27,7 +28,7 @@ await page.waitForTimeout(500);
 
 await sw.evaluate(async () => {
   const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  return chrome.tabs.sendMessage(tab.id, { type: 'designtool:toggle', armed: true });
+  return chrome.tabs.sendMessage(tab.id, { type: 'offpx:toggle', armed: true });
 });
 await page.waitForTimeout(400);
 
@@ -54,7 +55,7 @@ const pressPanel = (selector) =>
       target: { tabId: tab.id },
       world: 'ISOLATED',
       args: [selector],
-      func: (selector) => window.__designtool.overlay.panel.querySelector(selector)?.click(),
+      func: (selector) => window.__offpx.overlay.panel.querySelector(selector)?.click(),
     });
   }, selector);
 

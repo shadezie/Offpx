@@ -1,6 +1,12 @@
 # Design system
 
-The visual rules for Design Tool's own UI. It is an inspection tool, so it has
+The visual rules for Offpx's own UI. The brand itself (the mark, the lockup,
+colourways, clear space, voice) is defined in the Offpx Brand Guidelines v1.0;
+this file is how the product applies it. Where the two disagree, the
+guidelines win for anything that is the brand, and this file wins for
+functional UI such as selection and status colours.
+
+It is an inspection tool, so it has It is an inspection tool, so it has
 one job: be legible on top of any website, in front of any background, without
 competing with the page it is measuring.
 
@@ -21,16 +27,23 @@ Everything here is defined as CSS custom properties on `.layer` in
 
 ## Colour
 
-From the brand guideline (Figma, "Brand guidelines v1.0"). Four brand colours,
-and the guideline's own ratio note: neutral ground, ink type, blue used
-sparingly.
+From the Offpx Brand Guidelines v1.0: mostly paper and carbon, one Stray.
 
-| Brand | Hex | Use |
+| Brand | Hex | Use in the product |
 | --- | --- | --- |
-| Primary | `#2A51FD` | The mark, primary actions, active states |
-| Light | `#E8EDFF` | Chips, highlights |
-| Ink | `#0F172A` | Body copy and product chrome |
-| Neutral | `#F4F6FA` | Page and panel backgrounds, cards |
+| Carbon | `#171717` | Dark panel ground; text on light |
+| Warm paper | `#F5F4F0` | Canvas and wells on light; text on dark |
+| Stray | `#FF5436` | The mark's drawer, and nothing else in the UI |
+| Stray ink | `#CC3A20` | Not used in the panel yet |
+| Graphite | `#6B6A64` | Secondary text on light |
+| Ash | `#A3A39C` | Secondary text on dark |
+
+**Stray is not a UI colour.** The guidelines keep it for the drawer, large
+fills and Stray-ink text, one per surface. In the product the mark appears
+once, in the toolbar or panel header, and that is the Stray element. Status
+colours stay functional, which the guidelines ask for explicitly, and so do
+the selection blue and the measurement pink on the page: they are tools for
+reading the page, not brand.
 
 Two token groups, and they are not interchangeable. The **page overlay**
 (highlights, dimension lines, badges) is never themed: it has to read on top of
@@ -42,25 +55,27 @@ tells you whether it still holds.
 
 ### Surfaces and text
 
-Two looks on one structure: **Quiet** in light, **Ink** in dark. Neither uses
+Two looks on one structure: **Paper** in light, **Carbon** in dark. Neither uses
 containers. Structure comes from hairlines and type weight, and the numbers
 carry the emphasis that boxes used to.
 
-| Token | Dark (Ink) | Light (Quiet) | Use |
+| Token | Dark (Carbon) | Light (Paper) | Use |
 | --- | --- | --- | --- |
-| `--bg` | `#151618` | `#FFFFFF` | The panel and the stage toolbar |
-| `--bg-raised` | `#222428` | `#F3F3F4` | Wells: segmented controls, fields, buttons, kbd |
-| `--seg` | `#34373D` | `#FFFFFF` + hairline shadow | The active chip in a segmented control |
-| `--canvas` | `#0A0B0C` | `#F1F1F2` | The stage behind the framed page, with `--dots` |
-| `--line` | white 7.5% | `#EBEBED` | Hairlines between sections |
-| `--line-strong` | white 16% | `#D9D9DD` | Swatch edges |
-| `--text` | `#EDEEF0` | `#111113` | Values and section titles. 7:1 or better |
-| `--text-2` | `#9A9FA7` | `#68686D` | Labels. 4.5:1 or better on every ground |
-| `--text-3` | `#6D727A` | `#86868C` | Zero values, units, separators. 3:1 |
-| `--hover` | white 6% | ink 5% | Hover ground for anything clickable |
+| `--bg` | `#171717` Carbon | `#FFFFFF` | The panel and the stage toolbar |
+| `--bg-raised` | `#242423` | `#F5F4F0` Warm paper | Wells: segmented controls, fields, buttons, kbd |
+| `--seg` | `#3A3A37` | `#FFFFFF` + hairline shadow | The active chip in a segmented control |
+| `--canvas` | `#0E0E0E` | `#F5F4F0` Warm paper | The stage behind the framed page, with `--dots` |
+| `--line` | paper 8% | `#E8E7E2` | Hairlines between sections |
+| `--line-strong` | paper 16% | `#D6D5CF` | Swatch edges |
+| `--text` | `#F5F4F0` Warm paper | `#171717` Carbon | Values and section titles. 7:1 or better |
+| `--text-2` | `#A3A39C` Ash | `#6B6A64` Graphite | Labels. 4.5:1 or better on every ground |
+| `--text-3` | `#76766F` | `#84837C` | Zero values, units, separators. 3:1 |
+| `--hover` | paper 6% | carbon 5% | Hover ground for anything clickable |
 
-Ink is graphite rather than black, so it reads as a surface and not a hole in
-the page. Quiet is plain white and separates from the page by a hairline.
+Both themes are the brand's warm neutrals: Carbon and Warm paper, with
+Graphite and Ash for secondary text exactly where the guidelines put them. The
+light panel is white on a Warm paper canvas, so the panel reads as a sheet laid
+on the page's surround.
 
 An earlier pass used bordered tiles, uppercase mono labels and a tinted
 first-run block. Each was defensible alone and together they were noise: on a
@@ -125,29 +140,30 @@ zeros was a third of the drawing.
 
 ## Type
 
-Both brand typefaces ship with the extension as WOFF2 (`src/fonts/`, ~47KB
-total), registered on the document with the CSS Font Loading API. `@font-face`
-inside a shadow root is ignored by Chrome, so they cannot be declared in the
-overlay stylesheet. A strict `font-src` CSP can still refuse them; every step is
-guarded and the stack falls back to the platform fonts.
+Geist and Geist Mono, per the guidelines, ship with the extension as WOFF2
+(`src/fonts/`, about 73 KB for three files), registered on the document with
+the CSS Font Loading API. `@font-face` inside a shadow root is ignored by
+Chrome, so they cannot be declared in the overlay stylesheet. A strict
+`font-src` CSP can still refuse them; every step is guarded and the stack falls
+back to the platform fonts.
 
 | Role | Face |
 | --- | --- |
-| Labels, values, inspector readouts, section titles | IBM Plex Mono |
-| Hints and prose | Plus Jakarta Sans |
+| UI, labels, values, numbers | Geist 400 and 500 |
+| Selectors, token names, hex values | Geist Mono 400 |
 
-Sans throughout, with tabular figures so digits still align. Mono is kept for
-the things that are code: selectors, token names, hex values, and the labels
-drawn on the page.
+Two weights only, 400 and 500, as the guidelines set them; nothing is
+semibold. Tabular figures throughout, so digits align. Mono never sets prose:
+it marks something you could paste into code.
 
 | Style | Size / weight / tracking |
 | --- | --- |
-| Section title | 12px / 600 sans, sentence case, `--text` |
+| Section title | 12px / 500 sans, sentence case, `--text` |
 | Hero label | 11.5px / 400 sans, `--text-2` |
 | Hero value | 22px / 500 sans, tabular / `-0.02em`. 34px for a single distance |
 | Label (`dt`) | 12.5px / 400 sans, `--text-2` |
 | Value (`dd`) | 12.5px / 500 sans, tabular, `--text`, right-aligned |
-| Selection identity | 12.5px / 500 mono |
+| Selection identity | 13px / 400 mono |
 | Status line, steps | 12 to 12.5px / 400 sans |
 
 **Nothing on the panel is under 10px, and values are 12.5px.** v1 set 50 of its
@@ -366,20 +382,23 @@ API: a CSS entry animation would fire again every time the panel body is
 rebuilt, which is on every hover. With `prefers-reduced-motion` the movement
 goes and a 120ms fade stays.
 
-## Icon
+## Logo and icons
 
-`src/icons/icon.svg` is the source of truth, exported from Figma. The mark is
-three corner brackets around a cursor, on `#2A51FD`.
+From the brand kit, never redrawn or retyped.
 
-The committed PNGs (16, 32, 48, 128) are Figma exports too. Figma hints small
-sizes better than a browser downscale does, so prefer exporting from there.
-`node test/render-icons.mjs` regenerates them from the SVG when you need a size
-Figma has not exported; check the 16px result by eye before keeping it, since
-that is where the cursor and the top-left bracket start to merge.
+- **Toolbar and panel header:** the horizontal lockup, inlined from
+  `src/ui/logo.js`. Body and wordmark take `currentColor`, so it is the primary
+  colourway on light and the reversed one on dark; the drawer stays Stray. 22px
+  tall in the toolbar, 18px in the panel header, both above the 72px minimum
+  width.
+- **Chrome icons:** `src/icons/icon-16/20/24/32/48/128.png`, the kit's
+  hand-fitted app icons. 16, 20 and 24 are drawn pixel by pixel so the seam and
+  overhang stay crisp.
+- **Sources:** `docs/brand/` keeps the SVGs the dev build and store images are
+  made from.
 
-Note the icon blue (`#2A51FD`) is deeper than the dark-theme accent (`--accent`,
-`#3B63FF`). The lighter blue is chosen to stay legible on top of arbitrary
-websites, which the icon never has to do.
+Not used yet: the kit's dark-toolbar icon set. Switching to it needs the
+toolbar's colour, which a service worker cannot read.
 
 ## Adding to the UI
 

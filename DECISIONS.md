@@ -604,6 +604,30 @@ tone, a unit formatter, a mount check, two exports and a parameter. A scan for
 unsafe DOM writes found two `innerHTML` sites, both fed only by the static icon
 tables in the same file.
 
+## Renamed Offpx
+
+"Design Tool" named a category, not a product, and could not be searched for.
+The name is now Offpx, said off-pix: off, as in off by one, and px. The brand
+(mark, lockup, palette, type, voice) is defined in the Offpx Brand Guidelines
+v1.0 and its kit; the product takes from it rather than restating it.
+
+- **Logo and icons come from the kit files.** The lockup is inlined as the
+  kit's SVG, and the Chrome icons are the kit's hand-fitted PNGs. Nothing is
+  redrawn, because the guidelines say so and because a redrawn 16px icon loses
+  the one-pixel seam the mark depends on.
+- **Type is Geist and Geist Mono**, 400 and 500, cut to Latin and converted to
+  WOFF2. Semibold is gone from the panel because the brand does not use it.
+- **The palette moved to Carbon, Warm paper, Graphite and Ash.** Stray is not
+  a UI colour: the guidelines keep it for the mark's drawer, one per surface.
+  Selection blue, the measurement pink and the status colours stay, because
+  they are functional, which the guidelines allow explicitly.
+- **Internal names followed the product name**: the page-visible host id, the
+  message types and the storage key. Preferences saved under the old key are
+  read once so nobody loses their settings.
+- **The source moved to github.com/shadezie/Offpx.** The Web Store listing is
+  tied to the developer account, so it keeps its ID and installs and is
+  renamed in place.
+
 ### What is deliberately not here yet
 
 - Remembering a stage size per site rather than globally.

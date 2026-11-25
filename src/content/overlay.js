@@ -7,10 +7,10 @@
  * the panel opts back in.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { prefs } = DT;
 
-  const HOST_ID = 'designtool-root';
+  const HOST_ID = 'offpx-root';
   const MAX_Z = '2147483647';
   const HOST_STYLE = `position:fixed;top:0;left:0;width:0;height:0;margin:0;padding:0;border:0;z-index:${MAX_Z};pointer-events:none;`;
 
@@ -97,7 +97,7 @@
       root.appendChild(layer);
 
       panel = el('aside', 'panel');
-      panel.setAttribute('aria-label', 'Design Tool');
+      panel.setAttribute('aria-label', 'Offpx');
       head = el('header', 'panel-head');
       body = el('div', 'panel-body');
       foot = el('footer', 'panel-foot');

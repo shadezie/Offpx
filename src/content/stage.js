@@ -12,7 +12,7 @@
  * inspecting the page in place, with the panel docked over it.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { prefs, overlay } = DT;
 
   /**
@@ -311,7 +311,8 @@
     // Three columns: the name at the left edge, the controls centred in the
     // stage, the zoom at the right edge.
     const brand = el('div', 'tb-brand');
-    brand.append(el('span', 'brand-mark'), el('span', 'tb-name', 'Design Tool'));
+    // Static markup from the brand kit (src/ui/logo.js), never page content.
+    brand.innerHTML = DT.LOGO;
     const mid = el('div', 'tb-mid');
     mid.append(modes, devices, listWrap, dims, rotate);
     bar.append(brand, mid, zoomRead);
@@ -327,7 +328,7 @@
   function hideScrollbar(doc) {
     try {
       const style = doc.createElement('style');
-      style.id = 'designtool-frame';
+      style.id = 'offpx-frame';
       style.textContent =
         'html{scrollbar-width:none!important}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none!important}';
       (doc.head || doc.documentElement).appendChild(style);

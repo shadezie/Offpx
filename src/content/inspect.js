@@ -6,7 +6,7 @@
  * the capture phase and suppressed, except events from our own panel.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
   const { overlay } = DT;
 
   const SUPPRESSED = [
@@ -29,7 +29,7 @@
     const { doc } = DT.target;
     return doc
       .elementsFromPoint(x, y)
-      .filter((node) => node.id !== 'designtool-root' && node !== doc.documentElement);
+      .filter((node) => node.id !== 'offpx-root' && node !== doc.documentElement);
   }
 
   /**

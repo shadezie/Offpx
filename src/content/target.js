@@ -7,7 +7,7 @@
  * window and everything behaves as it always did.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   let win = window;
   let doc = document;

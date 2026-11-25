@@ -18,7 +18,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const source = fs.readFileSync(path.join(HERE, '..', 'src', 'ui', 'overlay-styles.js'), 'utf8');
 const sandbox = { window: {} };
 vm.runInNewContext(source, sandbox);
-const css = sandbox.window.__designtool.css;
+const css = sandbox.window.__offpx.css;
 
 function tokens(selector) {
   const start = css.indexOf(`${selector} {`);

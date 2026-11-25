@@ -11,7 +11,7 @@
  * token; test/contrast.test.mjs holds the pairs to their contrast floors.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   /**
    * @font-face inside a shadow root is ignored by Chrome, so the brand faces
@@ -20,9 +20,9 @@
    * own copy of either typeface.
    */
   DT.FONTS = [
-    ['Design Tool Sans', 'plus-jakarta-sans.woff2', { weight: '200 800' }],
-    ['Design Tool Mono', 'ibm-plex-mono-400.woff2', { weight: '400' }],
-    ['Design Tool Mono', 'ibm-plex-mono-500.woff2', { weight: '500' }],
+    ['Offpx Sans', 'geist-400.woff2', { weight: '400' }],
+    ['Offpx Sans', 'geist-500.woff2', { weight: '500' }],
+    ['Offpx Mono', 'geist-mono-400.woff2', { weight: '400' }],
   ];
 
   DT.css = `
@@ -40,9 +40,9 @@
 
   /* Brand type. The bundled faces load first, then the designer's local copy,
      then the platform stack. */
-  --sans: "Design Tool Sans", "Plus Jakarta Sans", ui-sans-serif, -apple-system,
+  --sans: "Offpx Sans", "Geist", ui-sans-serif, -apple-system,
     "Segoe UI", Roboto, sans-serif;
-  --mono: "Design Tool Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular,
+  --mono: "Offpx Mono", "Geist Mono", ui-monospace, SFMono-Regular,
     "SF Mono", Menlo, Consolas, monospace;
 
   /* ---- Page overlay. Never themed: it has to read on top of any site. ----
@@ -62,20 +62,25 @@
   --measure-guide: rgba(224, 21, 99, 0.6);
   --halo: rgba(255, 255, 255, 0.82);
 
-  /* ---- Panel, dark: "Ink". ----
-     Graphite rather than black. One ground for the whole panel and a slightly
-     lighter well for controls. Structure
-     comes from hairlines and type weight, not from boxes. */
-  --bg: #151618;
-  --bg-raised: #222428;
-  --seg: #34373d;
+  /* ---- Panel, dark: Carbon. ----
+     The Offpx palette (Brand Guidelines v1.0): Carbon ground, Warm paper text,
+     Ash for secondary text. One ground for the whole panel and a slightly
+     lighter well for controls. Structure comes from hairlines and type
+     weight, not from boxes.
+
+     Stray (#FF5436) is not a UI colour. The brand keeps it for the mark's
+     drawer, which appears once, in the toolbar. Selection blue, status colours
+     and the measurement pink stay functional. */
+  --bg: #171717;
+  --bg-raised: #242423;
+  --seg: #3a3a37;
   --seg-shadow: none;
-  --line: rgba(255, 255, 255, 0.075);
-  --line-strong: rgba(255, 255, 255, 0.16);
-  --text: #edeef0;
-  --text-2: #9a9fa7;
-  --text-3: #6d727a;
-  --hover: rgba(255, 255, 255, 0.06);
+  --line: rgba(245, 244, 240, 0.08);
+  --line-strong: rgba(245, 244, 240, 0.16);
+  --text: #f5f4f0;
+  --text-2: #a3a39c;
+  --text-3: #76766f;
+  --hover: rgba(245, 244, 240, 0.06);
 
   /* Brand blue lifts on dark: #2A51FD does not hold against graphite. */
   --accent: #3b63ff;
@@ -98,15 +103,15 @@
 
   /* Box model: one quiet tint for the rings, the accent for the content. It
      was four colours, which was the loudest thing on the panel. */
-  --box-ring: rgba(255, 255, 255, 0.04);
+  --box-ring: rgba(245, 244, 240, 0.04);
   --box-ring-line: transparent;
 
   --shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), -12px 0 32px rgba(0, 0, 0, 0.25);
 
   /* The stage: a dotted canvas the framed page sits on. */
-  --canvas: #0a0b0c;
-  --dots: rgba(255, 255, 255, 0.09);
-  --frame-ring: rgba(255, 255, 255, 0.16);
+  --canvas: #0e0e0e;
+  --dots: rgba(245, 244, 240, 0.08);
+  --frame-ring: rgba(245, 244, 240, 0.16);
   --panel-w: min(360px, calc(100vw - 96px));
 
   /* The built-in easings are too soft to read as intentional at these
@@ -124,20 +129,20 @@
   --ease-in-out-soft: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-/* ---- Panel, light: "Quiet". ----
-   White, hairlines, no containers. It separates from a white website by its
-   edge and shadow, not by a tinted ground. */
+/* ---- Panel, light: Paper. ----
+   White panel on a Warm paper canvas, Carbon text, Graphite for secondary
+   text. Hairlines, no containers. */
 .layer[data-theme="light"] {
   --bg: #ffffff;
-  --bg-raised: #f3f3f4;
+  --bg-raised: #f5f4f0;
   --seg: #ffffff;
-  --seg-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --line: #ebebed;
-  --line-strong: #d9d9dd;
-  --text: #111113;
-  --text-2: #68686d;
-  --text-3: #86868c;
-  --hover: rgba(17, 17, 19, 0.05);
+  --seg-shadow: 0 0 0 1px rgba(23, 23, 23, 0.08), 0 1px 2px rgba(23, 23, 23, 0.06);
+  --line: #e8e7e2;
+  --line-strong: #d6d5cf;
+  --text: #171717;
+  --text-2: #6b6a64;
+  --text-3: #84837c;
+  --hover: rgba(23, 23, 23, 0.05);
 
   --accent: #2a51fd;
   --on-accent: #ffffff;
@@ -154,13 +159,13 @@
   --mark-b: #b86a00;
 
   --box-ring: transparent;
-  --box-ring-line: #ebebed;
+  --box-ring-line: #e8e7e2;
 
   --shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), -12px 0 32px rgba(0, 0, 0, 0.05);
 
-  --canvas: #f1f1f2;
-  --dots: rgba(17, 17, 19, 0.1);
-  --frame-ring: rgba(17, 17, 19, 0.14);
+  --canvas: #f5f4f0;
+  --dots: rgba(23, 23, 23, 0.1);
+  --frame-ring: rgba(23, 23, 23, 0.14);
 }
 
 /* ---------- element highlights ---------- */
@@ -185,7 +190,7 @@
   border-radius: 6px;
   background: var(--hl-a);
   color: #fff;
-  font: 500 10px/1.4 var(--mono);
+  font: 400 10px/1.4 var(--mono);
   letter-spacing: 0.02em;
   white-space: nowrap;
   box-shadow: 0 0 0 1px var(--halo);
@@ -227,7 +232,7 @@
   border-radius: 4px;
   background: var(--measure);
   color: #fff;
-  font: 600 11px/1.3 var(--mono);
+  font: 400 11px/1.3 var(--mono);
   white-space: nowrap;
   box-shadow: 0 0 0 1px var(--halo), 0 1px 4px rgba(0, 0, 0, 0.3);
 }
@@ -244,7 +249,7 @@
 .layer[data-mode="arena"] .panel { box-shadow: -1px 0 0 var(--line); }
 /* The product's name and mark are in the toolbar there; the panel is titled
    for what it holds. */
-.layer[data-mode="arena"] .panel .brand-mark { display: none; }
+.layer[data-mode="arena"] .panel .brand-logo { display: none; }
 .layer[data-mode="arena"][data-side="left"] .panel { box-shadow: 1px 0 0 var(--line); }
 
 .stage {
@@ -262,8 +267,16 @@
 }
 /* A narrow window sheds the controls that have another way in: the size list
    first, then the typed fields, which the drag handle covers. */
-@container (max-width: 980px) { .tb-name { display: none; } }
-@container (max-width: 760px) { .pick { display: none; } }
+@container (max-width: 760px) { .tb-brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  color: var(--text);
+}
+/* The brand's typical UI header size: the lockup 24px tall, its minimum width
+   comfortably cleared. */
+.tb-brand .logo { height: 22px; } }
+@container (max-width: 860px) { .pick { display: none; } }
 @container (max-width: 580px) { .wh, .tb .read { display: none; } }
 .layer[data-side="left"] .stage { left: var(--panel-w); right: 0; }
 .stage :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 1px; }
@@ -286,7 +299,7 @@
   gap: 8px;
   min-width: 0;
   color: var(--text);
-  font: 600 12.5px/1.4 var(--sans);
+  font: 500 12.5px/1.4 var(--sans);
   letter-spacing: -0.005em;
   white-space: nowrap;
 }
@@ -541,17 +554,15 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   align-items: center;
   gap: 8px;
   color: var(--text);
-  font: 600 12.5px/1.4 var(--sans);
+  font: 500 12.5px/1.4 var(--sans);
   letter-spacing: -0.005em;
   white-space: nowrap;
 }
-.brand-mark {
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--accent);
-}
+/* The logo, from the brand kit. 18px tall here, which puts the lockup at
+   about 62px wide in the panel header; the toolbar uses the UI-header size. */
+.brand-logo { display: flex; flex: none; color: var(--text); }
+.logo { display: block; height: 18px; width: auto; }
+.layer[data-mode="inplace"] .brand-name { display: none; }
 
 .panel-body {
   flex: 1;
@@ -637,7 +648,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .guide-title {
   margin-bottom: 10px;
   color: var(--text);
-  font: 600 12px/1.4 var(--sans);
+  font: 500 12px/1.4 var(--sans);
 }
 .guide .icon-btn { position: absolute; top: -2px; right: 8px; }
 .guide ol { list-style: none; display: grid; gap: 8px; }
@@ -649,7 +660,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   color: var(--text-2);
   font: 400 12.5px/1.45 var(--sans);
 }
-.guide li b { color: var(--text); font-weight: 600; }
+.guide li b { color: var(--text); font-weight: 500; }
 .guide-n {
   width: 20px;
   height: 20px;
@@ -695,7 +706,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   border-radius: 4px;
   background: var(--hl-a);
   color: #fff;
-  font: 600 10px/16px var(--mono);
+  font: 500 10px/16px var(--mono);
   text-align: center;
 }
 .mark.is-b { background: var(--hl-b); color: var(--on-hl-b); }
@@ -705,7 +716,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .identity {
   flex: 1;
   min-width: 0;
-  font: 500 13px/1.4 var(--mono);
+  font: 400 13px/1.4 var(--mono);
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
@@ -808,7 +819,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   margin-left: 0;
   margin-top: 2px;
   color: var(--ok);
-  font: 500 12px/1.4 var(--mono);
+  font: 400 12px/1.4 var(--mono);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -831,7 +842,7 @@ input.field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   border: 0;
   background: none;
   color: var(--text);
-  font: 600 12px/1.4 var(--sans);
+  font: 500 12px/1.4 var(--sans);
   text-align: left;
   cursor: pointer;
 }
@@ -977,7 +988,7 @@ kbd {
   border-radius: 4px;
   background: var(--bg-raised);
   color: var(--text);
-  font: 500 10.5px/1.4 var(--mono);
+  font: 400 10.5px/1.4 var(--mono);
   white-space: nowrap;
 }
 
@@ -1081,7 +1092,7 @@ kbd {
 .token {
   max-width: 100%;
   color: var(--accent-text);
-  font: 500 12px/1.5 var(--mono);
+  font: 400 12px/1.5 var(--mono);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

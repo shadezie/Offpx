@@ -1,11 +1,16 @@
-# Design Tool
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/offpx-lockup-reversed.svg">
+  <img src="docs/brand/offpx-lockup.svg" alt="Offpx" height="40">
+</picture>
 
-A Chrome extension that turns any website into something you can QA the way you
-review a Figma file. Hover an element to read its type styles. Click two
-elements to measure the gap between them. See padding, border and margin as a
-spacing box instead of an alphabetical list of CSS.
+**Every pixel matters.**
 
-Built for designers doing design QA, not for reading CSS.
+Offpx is a Chrome extension that finds where the build drifted from the design.
+It inspects live websites: it measures spacing, reveals type, colour and layout
+properties, and tests responsive layouts at any screen size. It is made for
+designers and front-end teams who notice the pixel that is off.
+
+Say it *off-pix*. Write it Offpx: one word, capital O, lowercase px.
 
 ![Measuring the gap between two headings, with the spec of both](docs/readme/gap-distance.png)
 
@@ -54,7 +59,7 @@ locally, and nothing else.
 
 ## Install
 
-[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/design-tool/ggnmijonbnnankhpgaiiieejmbdopbka)
+[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/ggnmijonbnnankhpgaiiieejmbdopbka)
 
 Or load it from source:
 
@@ -229,8 +234,8 @@ as their on-page highlights: the type spec for text, width and height for a box.
   behave differently on the stage than in the tab.
 - **Where a page cannot be framed, the panel sits on it.** Whatever is under
   the panel cannot be hovered until you flip it to the other edge.
-- **Screenshots in this README** predate the side panel and show the old
-  floating card.
+- **Screenshots in this README** predate the side panel and the Offpx name,
+  and show the old floating card.
 - **Iframes inside the page** are inspected as one element. The tool does not
   reach into them.
 - **Highlight badges** show rendered size in px whatever the unit toggle says.
@@ -251,7 +256,7 @@ npm to run the tests.
 npm install         # Playwright plus the Chromium it drives, for the tests only
 npm test            # manifest, geometry and contrast checks, then both browser suites
 npm run test:unit   # geometry only, runs in a second, no browser
-npm run package     # builds dist/design-tool-<version>.zip for the Web Store
+npm run package     # builds dist/offpx-<version>.zip for the Web Store
 npm run dev         # builds ./dev/, a side-by-side copy for local testing
 ```
 
@@ -265,8 +270,8 @@ touching the version you actually use.
 What they would otherwise share is a name, an icon and a shortcut. `npm run
 dev` writes a `dev/` folder that fixes all three:
 
-- named **Design Tool (Dev)**
-- **black** icon (brand Ink) instead of brand blue
+- named **Offpx (Dev)**
+- the mark's drawer in **Ash** instead of Stray
 - **Alt+Shift+D**, leaving Alt+Shift+I to the published build
 
 Load `dev/` once via **Load unpacked**. After that, re-run `npm run dev` and
@@ -315,8 +320,10 @@ src/content/
   spacing-box.js           the margin/border/padding diagram
   prefs.js                 persisted unit, theme, dock edge, folds
 src/ui/overlay-styles.js   all injected CSS, as a string
-src/icons/icon.svg         icon source, exported from Figma
-src/fonts/                 the two brand typefaces, with their OFL licences
+src/ui/logo.js             the Offpx lockup, from the brand kit
+src/icons/                 the brand kit's app icons, 16 to 128
+src/fonts/                 Geist and Geist Mono, with their OFL licence
+docs/brand/                logo and icon SVG sources from the brand kit
 test/fixture.html          a page with known-correct values to check against
 test/verify.mjs            end-to-end checks in a real Chromium, page inspected in place
 test/stage.test.mjs        end-to-end checks of the stage, page served over http
@@ -325,15 +332,15 @@ test/contrast.test.mjs     holds the palette to its contrast floors, no browser
 test/manifest.test.mjs     keeps the shipped manifest minimal
 test/build-test-extension.mjs  patched copy the browser suite drives
 test/package.mjs           builds the Web Store zip
-test/render-icons.mjs      regenerates the icon PNGs from icon.svg
 ```
 
 ## Licence
 
 Code is MIT, see [LICENSE](LICENSE).
 
-The bundled typefaces are SIL Open Font License 1.1, with their licence texts in
-`src/fonts/`. The Design Tool name and logo are not covered by the MIT licence.
+The bundled typefaces are SIL Open Font License 1.1, with their licence text in
+`src/fonts/`. The Offpx name and logo are not covered by the MIT licence; see the
+brand guidelines for how to use them.
 
 `DESIGN.md` is the visual system. `DECISIONS.md` is why things are the way they
 are, including the things that turned out to be wrong.

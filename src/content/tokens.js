@@ -20,7 +20,7 @@
  * which is what the tool did before tokens existed.
  */
 (() => {
-  const DT = (window.__designtool = window.__designtool || {});
+  const DT = (window.__offpx = window.__offpx || {});
 
   // Walking every stylesheet is not free, so the maps are built once per
   // activation and the per-element answers are memoised.
