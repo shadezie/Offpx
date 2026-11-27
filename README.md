@@ -53,9 +53,11 @@ tool is turned off. It touches no other tab and no other site, and the page in
 the tab itself keeps its headers: only the copy on the stage loads without
 them.
 
-It makes no network requests of its own. It stores your unit, theme, which edge
-the panel docks to, which sections you folded and the stage size you last used,
-locally, and nothing else.
+It makes no network requests of its own: the stage reloads the page you are on,
+from the same site, and that is all. It stores your unit, theme, which edge the
+panel docks to, which sections you folded, whether you have seen the first-run
+steps and the stage size you last used, locally, and nothing else.
+See [PRIVACY.md](PRIVACY.md).
 
 ## Install
 

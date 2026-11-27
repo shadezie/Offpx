@@ -107,8 +107,8 @@ Esc clears the selection.
 
 ```
 Offpx inspects the styling of elements on the page the user is viewing,
-so a designer can check typography, spacing and layout against their design
-without reading CSS.
+at the screen sizes they choose, so a designer can check typography, spacing
+and layout against their design without reading CSS.
 ```
 
 **Permission justifications**
@@ -151,9 +151,9 @@ has granted access by activating the extension on that tab.
 
 ```
 Stores the user's own display preferences locally: the unit (px, rem or em),
-the light or dark theme, which edge the panel docks to, and the stage size last
-used. No
-browsing data is stored and nothing is transmitted.
+the light or dark theme, which edge the panel docks to, which panel sections
+are folded, whether the first-run steps have been seen, and the stage size last
+used. No browsing data is stored and nothing is transmitted.
 ```
 
 **Data usage disclosures**
@@ -164,7 +164,11 @@ Tick nothing. The extension collects no user data. Then certify all three:
 - Not being used or transferred for purposes unrelated to the single purpose
 - Not being used or transferred to determine creditworthiness or for lending
 
-**Privacy policy URL**: not required, since no user data is collected.
+**Privacy policy URL** (the Web Store asks for one on every listing):
+
+```
+https://github.com/shadezie/Offpx/blob/main/PRIVACY.md
+```
 
 ---
 
